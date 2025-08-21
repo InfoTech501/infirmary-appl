@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: infirmary-appl
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    username: infirmary
+    password: Changeme0
+    driver-class-name: oracle.jdbc.OracleDriver
