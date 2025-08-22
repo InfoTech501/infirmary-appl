@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.rocs.infirmary.application.security.utils.constants.SecurityConstant.JWT_TOKEN_HEADER;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/portal")
 public class UserController {
 
     private final UserService userService;

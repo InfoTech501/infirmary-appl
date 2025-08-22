@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
-import static com.rocs.infirmary.application.security.utils.enumeration.Role.USER_ROLE;
+import static com.rocs.infirmary.application.security.utils.enumeration.Role.*;
 
 @Service
 @Transactional
@@ -66,8 +66,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User registerUser(User user) {
        validateUsernameEmail(StringUtils.EMPTY, user.getUsername(), user.getPerson().getEmail());
        User newUser = new User();
+       String password;
        newUser.setUserId(generateUserId());
-       String password = generatePassword();
+       if(user.getPassword() == null){
+           password = generatePassword();
+       }else{
+           password = user.getPassword();
+       }
        String encryptedPassword = encodePassword(password);
 
        newUser.setPerson(user.getPerson());
@@ -77,11 +82,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
        newUser.setActive(true);
        newUser.setLocked(false);
-       newUser.setRole(USER_ROLE.name());
-       newUser.setAuthorities(Arrays.stream(USER_ROLE.getAuthorities()).toList());
-       LOGGER.info("PASSWORD: "+password);
-       this.userRepository.save(newUser);
-        return newUser;
+
+       if(user.getRole().equals("teacher")){
+           newUser.setRole(TEACHER_ROLE.name());
+           newUser.setAuthorities(Arrays.stream(TEACHER_ROLE.getAuthorities()).toList());
+       }else if(user.getRole().equals("admin")){
+           newUser.setRole(ADMIN_ROLE.name());
+           newUser.setAuthorities(Arrays.stream(ADMIN_ROLE.getAuthorities()).toList());
+       }else{
+           newUser.setRole(USER_ROLE.name());
+           newUser.setAuthorities(Arrays.stream(USER_ROLE.getAuthorities()).toList());
+       }
+
+        LOGGER.info("PASSWORD: "+password);
+
+        this.userRepository.save(newUser);
+
+       return newUser;
     }
 
     private User validateUsernameEmail(String currentUsername, String newUsername, String email) throws UserNotFoundException,EmailExistException,UsernameExistException{

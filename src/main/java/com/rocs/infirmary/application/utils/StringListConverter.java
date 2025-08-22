@@ -10,7 +10,7 @@ import static java.util.Collections.emptyList;
 
 @Convert
 public class StringListConverter implements AttributeConverter<List<String>, String> {
-    private static final String SPLIT_CHAR = ";";
+    private static final String SPLIT_CHAR = ",";
 
 
     @Override

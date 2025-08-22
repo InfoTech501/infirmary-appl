@@ -1,13 +1,13 @@
 package com.rocs.infirmary.application.security.utils.enumeration;
 
-import static com.rocs.infirmary.application.security.utils.constants.authority.Authorities.TEACHER_AUTHORITIES;
-import static com.rocs.infirmary.application.security.utils.constants.authority.Authorities.USER_AUTHORITIES;
+import static com.rocs.infirmary.application.security.utils.constants.authority.Authorities.*;
 
 public enum Role {
     USER_ROLE(USER_AUTHORITIES),
-    TEACHER_ROLE(TEACHER_AUTHORITIES);
+    TEACHER_ROLE(TEACHER_AUTHORITIES),
+    ADMIN_ROLE(ADMIN_AUTHORITIES);
 
-    private String[] authorities;
+    private final String[] authorities;
 
     Role(String... authorities) {
         this.authorities = authorities;
