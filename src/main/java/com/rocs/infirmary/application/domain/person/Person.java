@@ -6,6 +6,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * {@code Person} holds the basic credentials and identifying information of a person.
+ * */
 @Entity
 @Data
 public class Person implements Serializable {

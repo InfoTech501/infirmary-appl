@@ -1,7 +1,7 @@
 package com.rocs.infirmary.application.domain.user;
 
 import com.rocs.infirmary.application.domain.person.Person;
-import com.rocs.infirmary.application.utils.StringListConverter;
+import com.rocs.infirmary.application.utils.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * {@code User} represent the user entity. This hold the login information of this user.
+ * */
 @Entity(name = "login")
 @Data
 public class User implements Serializable {

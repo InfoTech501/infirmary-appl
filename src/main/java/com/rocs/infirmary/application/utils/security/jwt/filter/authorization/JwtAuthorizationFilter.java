@@ -1,6 +1,6 @@
-package com.rocs.infirmary.application.security.jwt.filter.authorization;
+package com.rocs.infirmary.application.utils.security.jwt.filter.authorization;
 
-import com.rocs.infirmary.application.security.jwt.token.provider.JwtTokenProvider;
+import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-import static com.rocs.infirmary.application.security.utils.constants.SecurityConstant.OPTIONS_HTTP_METHODS;
-import static com.rocs.infirmary.application.security.utils.constants.SecurityConstant.TOKEN_PREFIX;
+import static com.rocs.infirmary.application.utils.security.constants.SecurityConstant.OPTIONS_HTTP_METHODS;
+import static com.rocs.infirmary.application.utils.security.constants.SecurityConstant.TOKEN_PREFIX;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component

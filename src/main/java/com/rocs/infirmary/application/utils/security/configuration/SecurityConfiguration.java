@@ -1,8 +1,8 @@
-package com.rocs.infirmary.application.security.configuration;
+package com.rocs.infirmary.application.utils.security.configuration;
 
-import com.rocs.infirmary.application.security.jwt.filter.authentication.access.denied.JwtAccessDeniedHandler;
-import com.rocs.infirmary.application.security.jwt.filter.authentication.forbidden.AuthenticationEntryPoint;
-import com.rocs.infirmary.application.security.jwt.filter.authorization.JwtAuthorizationFilter;
+import com.rocs.infirmary.application.utils.security.jwt.filter.authentication.access.denied.JwtAccessDeniedHandler;
+import com.rocs.infirmary.application.utils.security.jwt.filter.authentication.forbidden.AuthenticationEntryPoint;
+import com.rocs.infirmary.application.utils.security.jwt.filter.authorization.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.rocs.infirmary.application.security.utils.constants.SecurityConstant.PUBLIC_URLS;
-
+import static com.rocs.infirmary.application.utils.security.constants.SecurityConstant.PUBLIC_URLS;
+/**
+ * {@code SecurityConfiguration} provides the security configuration for the application, setting up authentication, authorization,
+ *  and Cross-Origin Resource Sharing that allow or restrict access to the application’s resources from different domains.
+ * */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -37,7 +40,16 @@ public class SecurityConfiguration {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationConfiguration authenticationConfiguration;
-
+    /**
+     * Creates a new constructor for {@code SecurityConfiguration}
+     *
+     * @param jwtAuthorizationFilter filter the JWT token authorization
+     * @param jwtAccessDeniedHandler handle the access denied errors
+     * @param authenticationEntryPoint entry point for authentication failures
+     * @param userDetailsService load the user details
+     * @param bCryptPasswordEncoder password encoder (BCrypt)
+     * @param authenticationConfiguration configuration for authentication management
+     */
     public SecurityConfiguration(JwtAuthorizationFilter jwtAuthorizationFilter,
                                  JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                  AuthenticationEntryPoint authenticationEntryPoint,
@@ -52,6 +64,11 @@ public class SecurityConfiguration {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationConfiguration = authenticationConfiguration;
     }
+    /**
+     * Configures the AuthenticationManager with a user details service and password encoder.
+     *
+     * @param authenticationManagerBuilder the builder for the authentication manager
+     */
     @Autowired
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder){
         try {
@@ -60,10 +77,18 @@ public class SecurityConfiguration {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Provides bean for {@code AuthenticationManager}
+     * @return AuthenticationManager
+     * */
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+    /**
+     * Provides bean and Configruation for CorsConfiguration that allow specific domain and headers
+     * @return CorsConfigurationSource
+     * */
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -74,6 +99,14 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**",corsConfiguration);
         return source;
     }
+
+    /**
+     * Prvides bean and Configuration for security filters, session management, and request authorizations.
+     *
+     * @param httpSecurity the security configuration for HTTP requests
+     * @return the configured security filter chain
+     * @throws Exception if an error occurs during security setup
+     */
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).

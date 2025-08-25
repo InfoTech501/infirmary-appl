@@ -1,8 +1,8 @@
-package com.rocs.infirmary.application.security.jwt.filter.authentication.forbidden;
+package com.rocs.infirmary.application.utils.security.jwt.filter.authentication.forbidden;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocs.infirmary.application.domain.http.response.HttpResponse;
-import com.rocs.infirmary.application.security.utils.constants.SecurityConstant;
+import com.rocs.infirmary.application.utils.security.constants.SecurityConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
+/**
+ * {@code AuthenticationEntryPoint} trigger when the authentication fail
+ * */
 @Component
 public class AuthenticationEntryPoint extends Http403ForbiddenEntryPoint  {
     @Override

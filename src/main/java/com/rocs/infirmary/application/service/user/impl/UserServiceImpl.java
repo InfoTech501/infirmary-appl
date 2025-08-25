@@ -6,6 +6,7 @@ import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UsernameExistException;
 import com.rocs.infirmary.application.repository.user.UserRepository;
+import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.user.UserService;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
-import static com.rocs.infirmary.application.security.utils.enumeration.Role.*;
+import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
 
 @Service
 @Transactional
@@ -33,10 +34,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private LoginAttemptsService loginAttemptsService;
    @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,LoginAttemptsService loginAttemptsService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.loginAttemptsService = loginAttemptsService;
     }
 
     @Override
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             LOGGER.info(USER_NOT_FOUND);
             throw new UserNotFoundException(USER_NOT_FOUND);
         }else{
+            validateLoginAttempt(user);
             user.setLastLoginDate(new Date());
             this.userRepository.save(user);
             return new UserPrincipal(user);
@@ -136,5 +140,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
     private String encodePassword(String password){
         return bCryptPasswordEncoder.encode(password);
+    }
+    private void validateLoginAttempt(User user){
+       if(!user.isLocked()){
+           if(loginAttemptsService.hasExceedMaxAttempts(user.getUsername())){
+               user.setLocked(true);
+           }else{
+               user.setLocked(false);
+           }
+       }else{
+           loginAttemptsService.evictUserToLoginAttemptCache(user.getUsername());
+       }
     }
 }

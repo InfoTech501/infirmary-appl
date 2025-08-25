@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+/**
+ * {@code HttpResponse} represents a custom HTTP response object
+ * */
 @Data
 @AllArgsConstructor
 public class HttpResponse {

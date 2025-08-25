@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
 //Utils
+	implementation 'com.google.guava:guava:33.4.8-jre'
 	implementation 'org.apache.commons:commons-lang3:3.0'
 //	database
 	// https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
