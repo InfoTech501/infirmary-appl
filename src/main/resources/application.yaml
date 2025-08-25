@@ -1,8 +1,13 @@
 spring:
   application:
-    name: infirmary-appl
+    name : infirmary-application
   datasource:
-    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    url: jdbc:oracle:thin:@localhost:1521:orcl
     username: infirmary
     password: Changeme0
-    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+jwt:
+  secret: 'thebigbrownfoxjumpsoverthelazydog'
