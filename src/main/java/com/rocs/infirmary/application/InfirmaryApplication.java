@@ -9,14 +9,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * Serves as the entry point to start the Spring Boot application
  */
 @SpringBootApplication
-public class InfirmaryApplApplication {
+public class InfirmaryApplication {
 	/**
 	 * The main method to launch the Spring Boot application.
 	 *
 	 * @param args arguments passed to the application
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(InfirmaryApplApplication.class, args);
+		SpringApplication.run(InfirmaryApplication.class, args);
 	}
 	/**
 	 * This creates and returns BCryptPasswordEncoder.

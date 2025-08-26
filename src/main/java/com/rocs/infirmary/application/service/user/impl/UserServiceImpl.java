@@ -98,8 +98,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
            newUser.setAuthorities(Arrays.stream(USER_ROLE.getAuthorities()).toList());
        }
 
-        LOGGER.info("PASSWORD: "+password);
-
         this.userRepository.save(newUser);
 
        return newUser;

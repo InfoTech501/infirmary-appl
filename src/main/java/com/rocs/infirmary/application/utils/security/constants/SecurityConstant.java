@@ -46,5 +46,5 @@ public class SecurityConstant {
     /**
      * URL's that are available in public
      * */
-    public static final String[] PUBLIC_URLS = {"/user/portal/login-user","user/portal/register-user"};
+    public static final String[] PUBLIC_URLS = {"/user/login","user/register"};
 }

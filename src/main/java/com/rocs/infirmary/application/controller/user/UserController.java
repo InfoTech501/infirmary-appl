@@ -18,7 +18,7 @@ import static com.rocs.infirmary.application.utils.security.constants.SecurityCo
  * The {@code UserController} class use to implement the registration and login functionality of Infirmary web application
  * */
 @RestController
-@RequestMapping("/user/portal")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -32,7 +32,6 @@ public class UserController {
      * Spring to inject the necessary beans at runtime.
      *
      * @param userService the service layer for managing user operations
-     *
      * @param authenticationManager the Spring Security authentication manager used to authenticate user credentials
      * @param jwtTokenProvider the provider utility for generating and validating JWT used in secure authentication
      */
@@ -44,13 +43,13 @@ public class UserController {
     }
 
     /**
-     * {@code userLogin} used to handle the login request, this authenticates a user login based on the provided credential
+     * {@code login} used to handle the login request, this authenticates a user login based on the provided credential
      * @param user is the object containing the user's credential from the { @code RequestBody}.
      *
      * @return ResponseEntity containing the message, JWT Header and the Http Status
      * */
-    @PostMapping("/login-user")
-    public ResponseEntity<String> userLogin(@RequestBody User user){
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user){
         authUserLogin(user.getUsername(), user.getPassword());
         User loginUser = this.userService.findUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
@@ -58,12 +57,12 @@ public class UserController {
         return new ResponseEntity<>("Login success",jwtHeader, HttpStatus.OK);
     }
     /**
-     * {@code userRegistration} used to handle the registration request, this accepts the object
+     * {@code register} used to handle the registration request, this accepts the object
      * @param user that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
      * */
-    @PostMapping("/register-user")
-    public ResponseEntity<User> userRegistration(@RequestBody User user){
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user){
         User newUser = this.userService.registerUser(user);
         return new ResponseEntity<>(newUser,HttpStatus.OK);
     }
