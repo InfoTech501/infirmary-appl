@@ -2,7 +2,10 @@ package com.rocs.infirmary.application.domain.section;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+/**
+ * {@code Section} represents a school section where students belong.
+ * It stores details like adviser, strand, grade level, and section name.
+ */
 @Data
 @Entity
 @Table(name = "section")

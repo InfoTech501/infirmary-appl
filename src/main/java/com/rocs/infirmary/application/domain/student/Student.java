@@ -4,7 +4,11 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import jakarta.persistence.*;
 import lombok.Data;
-
+/**
+ * {@code Student} represents a student in the system.
+ * It stores details like LRN (student number), personal info,
+ * section details, and guardian information.
+ */
 @Data
 @Entity
 @Table(name = "student")
