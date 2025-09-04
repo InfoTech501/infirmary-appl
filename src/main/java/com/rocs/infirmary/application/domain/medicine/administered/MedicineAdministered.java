@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-
+/**
+ * {@code MedicineAdministered} represents the MedicineAdministered entity this holds information about the administered medicine
+ * */
 @Entity
 @Data
 public class MedicineAdministered {

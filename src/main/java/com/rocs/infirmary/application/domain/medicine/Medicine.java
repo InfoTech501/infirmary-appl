@@ -2,7 +2,9 @@ package com.rocs.infirmary.application.domain.medicine;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+/**
+ * {@code Medicine} represents the medicine entity, this holds information about the medicine
+ * */
 @Entity
 @Data
 public class Medicine {
