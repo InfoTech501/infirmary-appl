@@ -30,11 +30,6 @@ public class MedicationTrendReportServiceImpl implements MedicationTrendReportSe
     }
 
     @Override
-    public List<MedicineAdministered> findAll() {
-        return this.medicineAdministeredRepository.findAll();
-    }
-
-    @Override
     public Medicine findMedicineById(Long id) {
         Medicine medicine = this.medicineRepository.findMedicineById(id);
         if(medicine == null){
