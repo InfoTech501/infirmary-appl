@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.domain.medication.trend;
+package com.rocs.infirmary.application.domain.medicine.administered;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,4 +24,5 @@ public class MedicineAdministered {
     private int quantity;
     @Column(name = "date_administered")
     private Date dateAdministered;
+
 }
