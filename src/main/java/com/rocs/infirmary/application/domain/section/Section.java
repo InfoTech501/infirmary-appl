@@ -8,7 +8,6 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "section")
 public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

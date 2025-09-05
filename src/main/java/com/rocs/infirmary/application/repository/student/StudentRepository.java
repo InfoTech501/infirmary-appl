@@ -1,6 +1,6 @@
 package com.rocs.infirmary.application.repository.student;
 
-import com.rocs.infirmary.application.domain.student.Student;
+import com.rocs.infirmary.application.domain.person.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /**
@@ -15,5 +15,5 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
      * @return {@code true} if a student with the given LRN exists,
      * otherwise {@code false}
      */
-    boolean existsByLrn(Long lrn);
+    boolean findStudentByLrn(Long lrn);
 }

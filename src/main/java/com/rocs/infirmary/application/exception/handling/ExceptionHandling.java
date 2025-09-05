@@ -77,11 +77,6 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> usernameExistException(NoResultException exception){
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<HttpResponse> illegalArgumentException(IllegalArgumentException exception) {
-        return createHttpResponse(HttpStatus.BAD_REQUEST,exception.getMessage());
-    }
-
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus status, String message){
         return new ResponseEntity<>(new HttpResponse(status.value(),status,status.getReasonPhrase().toUpperCase(), message.toUpperCase()),status);
     }

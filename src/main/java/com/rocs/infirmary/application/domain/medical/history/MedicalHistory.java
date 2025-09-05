@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.domain.medical.history;
 
+import com.rocs.infirmary.application.domain.person.student.Student;
 import jakarta.persistence.*;
 import lombok.Data;
 /**
