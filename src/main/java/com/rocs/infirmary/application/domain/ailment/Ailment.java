@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * {@code AILMENTS} represents a specific medical ailment or condition that can be associated with a medical record
+ * */
 @Entity
 @Data
 @NoArgsConstructor

@@ -3,7 +3,7 @@ package com.rocs.infirmary.application.repository.report.monthlyAilment;
 import com.rocs.infirmary.application.domain.medicalRecord.MedicalRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,31 +17,12 @@ import java.util.List;
  */
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long> {
     /**
-     * Finds a list of medical records that fall within a specified date range and are marked as active.
-     * <p>
-     * Spring Data JPA automatically generates the query for this method based on its name.
-     * The method translates to a SQL query similar to:
-     * {@code SELECT * FROM medical_records WHERE visit_date BETWEEN ? AND ? AND is_active = ?}
-     * </p>
+     * Retrieves a list of {@link MedicalRecord} entities where the visit date falls
+     * between the specified start and end dates.
      *
-     * @param startDate The beginning of the date range (inclusive).
-     * @param endDate The end of the date range (inclusive).
-     * @param isActive The status flag (e.g., 1 for active) to filter records by.
-     * @return A list of matching {@link MedicalRecord} entities.
+     * @param startDate the beginning date of the visit date range
+     * @param endDate the ending date of the visit date range
+     * @return a list of medical records with visit dates between {@code startDate} and {@code endDate}
      */
-    List<MedicalRecord> findByVisitDateBetweenAndIsActive(LocalDateTime startDate, LocalDateTime endDate, Integer isActive);
-
-    /**
-     * Counts the number of medical records that fall within a specified date range and are marked as active.
-     * <p>
-     * This method is optimized to return a single count rather than fetching the full list of records,
-     * which is more efficient for large datasets.
-     * </p>
-     *
-     * @param startDate The beginning of the date range (inclusive).
-     * @param endDate The end of the date range (inclusive).
-     * @param isActive The status flag (e.g., 1 for active) to filter records by.
-     * @return The number of matching records as a {@link Long}.
-     */
-    Long countByVisitDateBetweenAndIsActive(LocalDateTime startDate, LocalDateTime endDate, Integer isActive);
+    List<MedicalRecord> findByVisitDateBetween(Date startDate, Date endDate);
 }

@@ -3,12 +3,14 @@ package com.rocs.infirmary.application.domain.medicalRecord;
 import com.rocs.infirmary.application.domain.ailment.Ailment;
 import com.rocs.infirmary.application.domain.medicalHistory.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
-import com.rocs.infirmary.application.domain.user.student.Student;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * {@code MEDICAL_RECORD} represents a medical record associated to patient, capturing visit details, vital signs, and relationships to ailments, medical history, and attending nurse.
+ * */
 @Entity
 @Data
 @Table(name = "MEDICAL_RECORD")
@@ -16,10 +18,6 @@ public class MedicalRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id", insertable = false, updatable = false)
-    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "ailment_id", insertable = false, updatable = false)

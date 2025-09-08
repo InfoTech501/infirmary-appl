@@ -3,6 +3,9 @@ package com.rocs.infirmary.application.domain.medicalHistory;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * {@code MEDICAL_HISTORY} represents the patient's medical history entry
+ * */
 @Entity
 @Data
 @Table(name = "MEDICAL_HISTORY")
