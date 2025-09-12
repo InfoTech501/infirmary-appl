@@ -1,9 +1,12 @@
 package com.rocs.infirmary.application.controller.reports;
 
+import com.rocs.infirmary.application.domain.medicalRecord.MonthlyReport.MonthlyReport;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -38,7 +41,7 @@ public class MonthlyAilmentReportController {
      */
     @GetMapping("/reports")
     public ResponseEntity<?> getMonthlyCommonAilments(@RequestParam int month, @RequestParam int year) {
-        Object report = monthlyAilmentReportService.generateMonthlyAilmentsReport(month, year);
+        List<MonthlyReport> report = monthlyAilmentReportService.generateMonthlyAilmentsReport(month, year);
         return ResponseEntity.ok(report);
     }
 }

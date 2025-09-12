@@ -1,11 +1,10 @@
 package com.rocs.infirmary.application.service.report.monthlyAilment.impl;
 
 import com.rocs.infirmary.application.domain.medicalRecord.MedicalRecord;
+import com.rocs.infirmary.application.domain.medicalRecord.MonthlyReport.MonthlyReport;
 import com.rocs.infirmary.application.repository.report.monthlyAilment.MedicalRecordRepository;
 import com.rocs.infirmary.application.exception.domain.MonthlyAilmentReportException;
-import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
      * @return JSON-compatible list or a message map
      */
     @Override
-    public Object generateMonthlyAilmentsReport(int month, int year) {
+    public List<MonthlyReport> generateMonthlyAilmentsReport(int month, int year) {
         LOGGER.info("Generating monthly ailments report for {}/{}", month, year);
 
         try {
@@ -49,24 +48,41 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
 
             List<MedicalRecord> records = medicalRecordRepository.findByVisitDateBetween(start, end);
 
-            if (records.isEmpty()) {return Map.of("message", "No data available.");}
+            if (records.isEmpty()) {
+                LOGGER.warn("No medical record was found. {}/{}", month,year );
+                return new ArrayList<>();
+            }
 
-            Map<String, Long> ailmentCounts = records.stream().filter(record -> record.getAilment() != null && record.getAilment().getDescription() != null).collect(Collectors.groupingBy(
-                            r -> r.getAilment().getDescription(), Collectors.counting()));
-            int[] rank = {1};
-            return ailmentCounts.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                    .map(entry -> {
-                        Map<String, Object> item = new HashMap<>();
-                        item.put("rank", rank[0]++);
-                        item.put("illness", entry.getKey());
-                        item.put("noOfStudents", entry.getValue());
-                        return item;
-                    }).collect(Collectors.toList());
+            Map<String, Long> ailmentCounts = processAilmentCounts(records);
+            return generateReportItems(ailmentCounts);
 
         } catch (Exception e) {
             LOGGER.error("Error generating monthly ailment report", e);
             throw new MonthlyAilmentReportException("An error occurred while generating report.", e);
         }
+    }
+
+    private Map<String, Long> processAilmentCounts(List<MedicalRecord> records) {
+        return records.stream().filter(record ->record.getAilment() != null && record.getAilment().getDescription() !=null)
+                .collect(Collectors.groupingBy(r -> r.getAilment().getDescription(),Collectors.counting()));
+    }
+
+    private List<MonthlyReport> generateReportItems(Map<String, Long> ailmentCounts) {
+        List<Map.Entry<String, Long>> sortedEntries = new ArrayList<>(ailmentCounts.entrySet());
+        sortedEntries.sort(Map.Entry.<String, Long>comparingByValue().reversed());
+
+        List<MonthlyReport> reportItems = new ArrayList<>();
+        int rank = 1;
+
+        for (Map.Entry<String, Long> entry : sortedEntries) {
+            MonthlyReport reportRecord = new MonthlyReport();
+            reportRecord.setRank(rank++);
+            reportRecord.setIllness(entry.getKey());
+            reportRecord.setNoOfStudents(entry.getValue());
+            reportItems.add(reportRecord);
+        }
+
+        return reportItems;
     }
 }
 

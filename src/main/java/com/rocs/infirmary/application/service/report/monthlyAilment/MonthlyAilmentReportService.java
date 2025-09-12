@@ -1,5 +1,9 @@
 package com.rocs.infirmary.application.service.report.monthlyAilment;
 
+import com.rocs.infirmary.application.domain.medicalRecord.MonthlyReport.MonthlyReport;
+
+import java.util.List;
+
 /**
  * Service interface for generating monthly reports on common ailments.
  * <p>
@@ -16,5 +20,5 @@ public interface MonthlyAilmentReportService {
      * @param year The target year (e.g., 2025)
      * @return JSON-compatible list or a message map
      */
-    Object generateMonthlyAilmentsReport(int month, int year);
+    List<MonthlyReport> generateMonthlyAilmentsReport(int month, int year);
 }
