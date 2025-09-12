@@ -1,6 +1,6 @@
 package com.rocs.infirmary.application.controller.reports;
 
-import com.rocs.infirmary.application.domain.medicalRecord.MonthlyReport.MonthlyReport;
+import com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport.MonthlyAilmentReport;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,8 +41,8 @@ public class MonthlyAilmentReportController {
      * @return a {@link ResponseEntity} containing the generated ailment report
      */
     @GetMapping("/reports")
-    public ResponseEntity<List<MonthlyReport>> getMonthlyCommonAilments(@RequestParam int month, @RequestParam int year) {
-        List<MonthlyReport> report = monthlyAilmentReportService.generateMonthlyAilmentsReport(month, year);
+    public ResponseEntity<List<MonthlyAilmentReport>> getMonthlyCommonAilments(@RequestParam int month, @RequestParam int year) {
+        List<MonthlyAilmentReport> report = monthlyAilmentReportService.generateMonthlyAilmentsReport(month, year);
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 package com.rocs.infirmary.application.service.report.monthlyAilment.impl;
 
 import com.rocs.infirmary.application.domain.medicalRecord.MedicalRecord;
-import com.rocs.infirmary.application.domain.medicalRecord.MonthlyReport.MonthlyReport;
+import com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport.MonthlyAilmentReport;
 import com.rocs.infirmary.application.repository.report.monthlyAilment.MedicalRecordRepository;
 import com.rocs.infirmary.application.exception.domain.MonthlyAilmentReportException;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
@@ -36,7 +36,7 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
      * @return JSON-compatible list or a message map
      */
     @Override
-    public List<MonthlyReport> generateMonthlyAilmentsReport(int month, int year) {
+    public List<MonthlyAilmentReport> generateMonthlyAilmentsReport(int month, int year) {
         LOGGER.info("Generating monthly ailments report for {}/{}", month, year);
 
         try {
@@ -67,15 +67,15 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
                 .collect(Collectors.groupingBy(r -> r.getAilment().getDescription(),Collectors.counting()));
     }
 
-    private List<MonthlyReport> generateReportItems(Map<String, Long> ailmentCounts) {
+    private List<MonthlyAilmentReport> generateReportItems(Map<String, Long> ailmentCounts) {
         List<Map.Entry<String, Long>> sortedEntries = new ArrayList<>(ailmentCounts.entrySet());
         sortedEntries.sort(Map.Entry.<String, Long>comparingByValue().reversed());
 
-        List<MonthlyReport> reportItems = new ArrayList<>();
+        List<MonthlyAilmentReport> reportItems = new ArrayList<>();
         int rank = 1;
 
         for (Map.Entry<String, Long> entry : sortedEntries) {
-            MonthlyReport reportRecord = new MonthlyReport();
+            MonthlyAilmentReport reportRecord = new MonthlyAilmentReport();
             reportRecord.setRank(rank++);
             reportRecord.setIllness(entry.getKey());
             reportRecord.setNoOfStudents(entry.getValue());
