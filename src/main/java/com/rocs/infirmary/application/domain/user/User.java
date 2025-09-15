@@ -22,10 +22,6 @@ public class User implements Serializable {
     private String userId;
     private String username;
     private String password;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Person person;
-
     private Date lastLoginDate;
     private Date joinDate;
     private String role;
