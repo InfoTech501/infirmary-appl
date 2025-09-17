@@ -15,5 +15,5 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
      * @return {@code true} if a student with the given LRN exists,
      * otherwise {@code false}
      */
-    boolean findStudentByLrn(Long lrn);
+    boolean existsByLrn(Long lrn);
 }

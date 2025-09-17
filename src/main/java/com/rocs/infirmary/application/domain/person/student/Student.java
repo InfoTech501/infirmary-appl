@@ -12,17 +12,10 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "student")
+@PrimaryKeyJoinColumn(name = "person_id")
 public class Student extends Person{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private Long lrn;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "person_id")
-    private Person person;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "section_section_id")

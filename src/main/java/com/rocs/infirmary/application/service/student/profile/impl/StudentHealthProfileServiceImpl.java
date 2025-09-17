@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.person.student.Student;
 import com.rocs.infirmary.application.exception.domain.EmptyFieldException;
+import com.rocs.infirmary.application.exception.domain.StudentAlreadyExistException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.profile.StudentHealthProfileService;
 import jakarta.transaction.Transactional;
@@ -43,15 +44,21 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
 
         validateRequiredFields(student);
 
-        if (studentRepository.findStudentByLrn(student.getLrn())) {
+        if (studentRepository.existsByLrn(student.getLrn())) {
             LOGGER.error("Student with LRN {} already exists!", student.getLrn());
-            throw new EmptyFieldException(STUDENT_ALREADY_EXISTS);
+            throw new StudentAlreadyExistException(STUDENT_ALREADY_EXISTS);
         }
         Student newStudent = new Student();
         newStudent.setLrn(student.getLrn());
-
-        Person person = student.getPerson();
-        newStudent.setPerson(person);
+        newStudent.setFirstName(student.getFirstName());
+        newStudent.setMiddleName(student.getMiddleName());
+        newStudent.setLastName(student.getLastName());
+        newStudent.setAge(student.getAge());
+        newStudent.setBirthdate(student.getBirthdate());
+        newStudent.setGender(student.getGender());
+        newStudent.setEmail(student.getEmail());
+        newStudent.setAddress(student.getAddress());
+        newStudent.setContactNumber(student.getContactNumber());
 
         Section section = student.getSection();
         newStudent.setSection(section);
@@ -69,31 +76,31 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
             LOGGER.error("Validation failed: LRN is missing");
             throw new EmptyFieldException(LRN_REQUIRED);
         }
-        if (student.getPerson().getFirstName() == null || student.getPerson().getFirstName().trim().isEmpty()) {
+        if (student.getFirstName() == null || student.getFirstName().trim().isEmpty()) {
             LOGGER.error("Validation failed: First name is missing");
             throw new EmptyFieldException(FIRST_NAME_REQUIRED);
         }
-        if (student.getPerson().getLastName() == null || student.getPerson().getLastName().trim().isEmpty()) {
+        if (student.getLastName() == null || student.getLastName().trim().isEmpty()) {
             LOGGER.error("Validation failed: Last name is missing");
             throw new EmptyFieldException(LAST_NAME_REQUIRED);
         }
-        if (student.getPerson().getBirthdate() == null) {
+        if (student.getBirthdate() == null) {
             LOGGER.error("Validation failed: Birthdate is missing");
             throw new EmptyFieldException(BIRTHDAY_REQUIRED);
         }
-        if (student.getPerson().getGender() == null || student.getPerson().getGender().trim().isEmpty()) {
+        if (student.getGender() == null || student.getGender().trim().isEmpty()) {
             LOGGER.error("Validation failed: Gender is missing");
             throw new EmptyFieldException(GENDER_REQUIRED);
         }
-        if (student.getPerson().getEmail() == null || student.getPerson().getEmail().trim().isEmpty()) {
+        if (student.getEmail() == null || student.getEmail().trim().isEmpty()) {
             LOGGER.error("Validation failed: Email is missing");
             throw new EmptyFieldException(EMAIL_REQUIRED);
         }
-        if (student.getPerson().getAddress() == null || student.getPerson().getAddress().trim().isEmpty()) {
+        if (student.getAddress() == null || student.getAddress().trim().isEmpty()) {
             LOGGER.error("Validation failed: Address is missing");
             throw new EmptyFieldException(ADDRESS_REQUIRED);
         }
-        if (student.getPerson().getContactNumber() == null || student.getPerson().getContactNumber().trim().isEmpty()) {
+        if (student.getContactNumber() == null || student.getContactNumber().trim().isEmpty()) {
             LOGGER.error("Validation failed: Contact number is missing");
             throw new EmptyFieldException(CONTACT_NUMBER_REQUIRED);
         }
