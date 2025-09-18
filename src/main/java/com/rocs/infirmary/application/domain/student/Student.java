@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-
+/**
+ * this represents the student entity which holds information about the student
+ * */
 @Entity
 @Data
 public class Student implements Serializable {

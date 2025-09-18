@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.service.user.impl;
 
+import com.rocs.infirmary.application.domain.employee.Employee;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.section.Section;
@@ -9,6 +10,7 @@ import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UsernameExistException;
+import com.rocs.infirmary.application.repository.employee.EmployeeRepository;
 import com.rocs.infirmary.application.repository.person.PersonRepository;
 import com.rocs.infirmary.application.repository.section.SectionRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
@@ -16,6 +18,7 @@ import com.rocs.infirmary.application.repository.user.UserRepository;
 import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.user.UserService;
 import com.rocs.infirmary.application.utils.security.enumeration.Role;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,16 +50,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private LoginAttemptsService loginAttemptsService;
     private StudentRepository studentRepository;
     private PersonRepository personRepository;
+    private EmployeeRepository employeeRepository;
+    /**
+     * this creates a constructor for UserServiceImpl that is used to inject the required dependencies
+     * */
    @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
                            LoginAttemptsService loginAttemptsService,
                            StudentRepository studentRepository,
-                           PersonRepository personRepository) {
+                           PersonRepository personRepository,
+                           EmployeeRepository employeeRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -87,50 +96,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Registration registerUser(Registration registration) {
        if(registration.getStudent() != null){
-           validateUsername(StringUtils.EMPTY, registration.getStudent().getUser().getUsername());
-
-           String username = registration.getStudent().getUser().getUsername();
-           String password = registration.getStudent().getUser().getPassword() == null
-                   ? generatePassword()
-                   : registration.getStudent().getUser().getPassword();
-
-           User newUser = new User();
-           newUser.setUserId(generateUserId());
-           newUser.setUsername(username);
-           newUser.setPassword(encodePassword(password));
-           newUser.setActive(true);
-           newUser.setLocked(false);
-           newUser.setJoinDate(new Date());
-
-           String role = registration.getStudent().getUser().getRole();
-           if ("teacher".equals(role)) {
-               newUser.setRole(TEACHER_ROLE.name());
-               newUser.setAuthorities(Arrays.stream(TEACHER_ROLE.getAuthorities()).toList());
-           } else if ("admin".equals(role)) {
-               newUser.setRole(ADMIN_ROLE.name());
-               newUser.setAuthorities(Arrays.stream(ADMIN_ROLE.getAuthorities()).toList());
-           } else if ("student".equals(role)) {
-               newUser.setRole(STUDENT_ROLE.name());
-               newUser.setAuthorities(Arrays.stream(STUDENT_ROLE.getAuthorities()).toList());
-           }
-
-           Student student = new Student();
-           student.setPerson(registration.getStudent().getPerson());
-           student.setSection(registration.getStudent().getSection());
-           student.setLrn(registration.getStudent().getLrn());
-           student.setUser(newUser);  // 🔑 link User to Student
-
-
-           Student savedStudent = studentRepository.save(student);
-
-
-           Registration savedRegistration = new Registration();
-           savedRegistration.setStudent(savedStudent);
-           return savedRegistration;
+           return registerStudent(registration);
+       }else if(registration.getEmployee() != null) {
+           return registerEmployee(registration);
        }
         return registration;
     }
-
 
     private User validateUsername(String currentUsername, String newUsername) throws UserNotFoundException,EmailExistException,UsernameExistException{
        User userEmail = findUserByUsername(newUsername);
@@ -158,6 +129,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        }
 
     }
+
     private String generateUserId(){
        return RandomStringUtils.randomNumeric(10);
     }
@@ -177,5 +149,69 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        }else{
            loginAttemptsService.evictUserToLoginAttemptCache(user.getUsername());
        }
+    }
+
+    private Registration registerStudent(Registration registration){
+        validateUsername(StringUtils.EMPTY, registration.getStudent().getUser().getUsername());
+
+        String username = registration.getStudent().getUser().getUsername();
+        String password = registration.getStudent().getUser().getPassword() == null
+                ? generatePassword()
+                : registration.getStudent().getUser().getPassword();
+
+        User newUser = new User();
+        newUser.setPerson(registration.getStudent().getPerson());
+        newUser.setUserId(generateUserId());
+        newUser.setUsername(username);
+        newUser.setPassword(encodePassword(password));
+        newUser.setActive(true);
+        newUser.setLocked(false);
+        newUser.setJoinDate(new Date());
+
+        newUser.setRole(STUDENT_ROLE.name());
+        newUser.setAuthorities(Arrays.stream(STUDENT_ROLE.getAuthorities()).toList());
+
+        Student student = new Student();
+        student.setPerson(registration.getStudent().getPerson());
+        student.setSection(registration.getStudent().getSection());
+        student.setLrn(registration.getStudent().getLrn());
+        student.setUser(newUser);
+
+        Student savedStudent = this.studentRepository.save(student);
+        Registration savedRegistration = new Registration();
+        savedRegistration.setStudent(savedStudent);
+        return savedRegistration;
+    }
+    private Registration registerEmployee(Registration registration){
+        validateUsername(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername());
+
+        String username = registration.getEmployee().getUser().getUsername();
+        String password = registration.getEmployee().getUser().getPassword() == null
+                ? generatePassword()
+                : registration.getEmployee().getUser().getPassword();
+
+        User newUser = new User();
+        newUser.setPerson(registration.getEmployee().getPerson());
+        newUser.setUserId(generateUserId());
+        newUser.setUsername(username);
+        newUser.setPassword(encodePassword(password));
+        newUser.setActive(true);
+        newUser.setLocked(false);
+        newUser.setJoinDate(new Date());
+
+        newUser.setRole(TEACHER_ROLE.name());
+        newUser.setAuthorities(Arrays.stream(TEACHER_ROLE.getAuthorities()).toList());
+
+        Employee employee = new Employee();
+        employee.setPerson(registration.getEmployee().getPerson());
+        employee.setUser(newUser);
+        employee.setEmployeeNumber(registration.getEmployee().getEmployeeNumber());
+        employee.setDateEmployed(registration.getEmployee().getDateEmployed());
+        employee.setEmploymentStatus(registration.getEmployee().getEmploymentStatus());
+
+        Employee savedEmployee = this.employeeRepository.save(employee);
+        Registration savedRegistration = new Registration();
+        savedRegistration.setEmployee(savedEmployee);
+        return savedRegistration;
     }
 }

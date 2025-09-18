@@ -4,6 +4,8 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
+import jakarta.mail.MessagingException;
+
 /**
  * {@code UserService} is an interface of the UserService
  * */
