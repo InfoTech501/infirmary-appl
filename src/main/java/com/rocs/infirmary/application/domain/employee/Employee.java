@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.domain.employee;
 
+import com.rocs.infirmary.application.domain.department.Department;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.user.User;
 import jakarta.persistence.*;
@@ -26,4 +27,6 @@ public class Employee {
     private Person person;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Department department;
 }

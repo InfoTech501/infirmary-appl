@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.service.user.impl;
 
+import com.rocs.infirmary.application.domain.department.Department;
 import com.rocs.infirmary.application.domain.employee.Employee;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
@@ -10,6 +11,7 @@ import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UsernameExistException;
+import com.rocs.infirmary.application.repository.department.DepartmentRepository;
 import com.rocs.infirmary.application.repository.employee.EmployeeRepository;
 import com.rocs.infirmary.application.repository.person.PersonRepository;
 import com.rocs.infirmary.application.repository.section.SectionRepository;
@@ -33,10 +35,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
 import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
@@ -52,6 +51,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private StudentRepository studentRepository;
     private PersonRepository personRepository;
     private EmployeeRepository employeeRepository;
+    private DepartmentRepository departmentRepository;
     private EmailService emailService;
     /**
      * this creates a constructor for UserServiceImpl that is used to inject the required dependencies
@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            StudentRepository studentRepository,
                            PersonRepository personRepository,
                            EmployeeRepository employeeRepository,
+                           DepartmentRepository departmentRepository,
                            EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -69,6 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
         this.emailService = emailService;
     }
 
@@ -234,6 +236,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Employee employee = new Employee();
         employee.setPerson(registration.getEmployee().getPerson());
+
+        List<Department> departmentList = this.departmentRepository.findAll();
+
+        String deptName = registration.getEmployee().getDepartment().getDepartmentName();
+
+        Department department = departmentList.stream()
+                .filter(d -> d.getDepartmentName().equalsIgnoreCase(deptName))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Department not found: " + deptName));
+
+        employee.setDepartment(department);
         employee.setUser(newUser);
         employee.setEmployeeNumber(registration.getEmployee().getEmployeeNumber());
         employee.setDateEmployed(registration.getEmployee().getDateEmployed());
