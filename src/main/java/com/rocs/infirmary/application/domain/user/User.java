@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.utils.converter.StringListConverter;
 import jakarta.persistence.*;
@@ -22,13 +23,14 @@ public class User implements Serializable {
     private String userId;
     private String username;
     private String password;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Person person;
-
     private Date lastLoginDate;
     private Date joinDate;
     private String role;
+
+    @OneToOne
+    @JoinColumn(name = "person_id",referencedColumnName = "id")
+    @JsonIgnore
+    private Person person;
 
     @Column(name = "authorities", nullable = false)
     @Convert(converter = StringListConverter.class)

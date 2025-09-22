@@ -1,6 +1,11 @@
 package com.rocs.infirmary.application.service.user;
 
+import com.rocs.infirmary.application.domain.person.Person;
+import com.rocs.infirmary.application.domain.registration.Registration;
+import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
+import jakarta.mail.MessagingException;
+
 /**
  * {@code UserService} is an interface of the UserService
  * */
@@ -18,12 +23,18 @@ public interface UserService {
      * @param email is the email provided by the user
      * @return User
      * */
-    User findUserByPersonEmail(String email);
+    Person findUserByRegistrationEmail(String email);
     /**
      * registers the user using their credentials
      *
-     * @param user is the object of the user that contains the user credential
+     * @param registration is the object of the registration that contains the registration credential
      * @return User
      * */
-    User registerUser(User user);
+    Registration registerUser(Registration registration);
+    /**
+     * this is used to set a new password when a user forgets it
+     *
+     * @param user is the object that contains the user credentials
+     * */
+    User forgetPassword(User user) throws MessagingException;
 }
