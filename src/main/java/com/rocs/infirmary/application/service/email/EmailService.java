@@ -17,7 +17,7 @@ import static com.rocs.infirmary.application.domain.email.constant.EmailConstant
 
 
 /**
- * This Service sends emails, including OTP confirmation emails.
+ * This Service sends emails to user when they update their password.
  */
 @Service
 public class EmailService {
@@ -25,27 +25,23 @@ public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     /**
-     * Sends an OTP (One-Time Password) to the provided email address.
-     *
-     * @param email the recipient's email address
-     * @param otp   the one-time password to be sent
-     * @throws MessagingException  if an error occurs while sending the email
+     * Sends an Email with the new password to the provided email address.
      */
-    public void sendNewPasswordEmail(String email, String otp) throws MessagingException {
-        Message message = createEmail(email, otp);
+    public void sendNewPasswordEmail(String email,String firstName, String password) throws MessagingException {
+        Message message = createEmail(email,firstName, password);
         try (Transport smtpTransport = getEmailSession().getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL)) {
             smtpTransport.connect(GMAIL_SMTP_SERVER, USERNAME, PASSWORD);
             smtpTransport.sendMessage(message, message.getAllRecipients());
-            LOGGER.info("OTP sent to email: {}", email);
+            LOGGER.info("Message sent to email: {}", email);
         }
     }
 
-    private Message createEmail(String email,String otp) throws MessagingException {
+    private Message createEmail(String email,String firstName, String password) throws MessagingException {
         Message message = new MimeMessage(getEmailSession());
         message.setFrom(new InternetAddress(FROM_EMAIL));
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
         message.setSubject(EMAIL_SUBJECT);
-        message.setText("Your OTP for confirmation is:" + otp);
+        message.setText("The Lord be with you and good day "+firstName + "\n\nyour account password is: "+ password+"\n\n Infirmary Support team");
         message.setSentDate(new Date());
         message.saveChanges();
         return message;

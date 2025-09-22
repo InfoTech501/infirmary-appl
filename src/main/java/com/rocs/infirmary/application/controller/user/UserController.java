@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.service.user.UserService;
 import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -66,6 +67,16 @@ public class UserController {
     public ResponseEntity<Registration> register(@RequestBody Registration registration){
         Registration registeredUser = this.userService.registerUser(registration);
         return new ResponseEntity<>(registeredUser,HttpStatus.OK);
+    }
+    /**
+     * {@code forgetPassword} used to handle the forget password request, this accepts the object
+     * @param user that contains the credential provided by the user
+     * @return ResponseEntity containing the user object, and  Http Status
+     * */
+    @PostMapping("/forget-password")
+    public ResponseEntity<String> forgetPassword(@RequestBody User user) throws MessagingException {
+        this.userService.forgetPassword(user);
+        return new ResponseEntity<>("Email is sent",HttpStatus.OK);
     }
 
     private void authUserLogin(String username, String password){

@@ -9,5 +9,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  logging:
+    level:
+      org.springframework.security.web: info
+      root: info
+    file:
+      name: build/log/${spring.application.name}.log
 jwt:
   secret: 'thebigbrownfoxjumpsoverthelazydog'

@@ -31,4 +31,10 @@ public interface UserService {
      * @return User
      * */
     Registration registerUser(Registration registration);
+    /**
+     * this is used to set a new password when a user forgets it
+     *
+     * @param user is the object that contains the user credentials
+     * */
+    User forgetPassword(User user) throws MessagingException;
 }

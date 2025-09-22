@@ -15,6 +15,7 @@ import com.rocs.infirmary.application.repository.person.PersonRepository;
 import com.rocs.infirmary.application.repository.section.SectionRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.repository.user.UserRepository;
+import com.rocs.infirmary.application.service.email.EmailService;
 import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.user.UserService;
 import com.rocs.infirmary.application.utils.security.enumeration.Role;
@@ -51,6 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private StudentRepository studentRepository;
     private PersonRepository personRepository;
     private EmployeeRepository employeeRepository;
+    private EmailService emailService;
     /**
      * this creates a constructor for UserServiceImpl that is used to inject the required dependencies
      * */
@@ -59,13 +61,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            LoginAttemptsService loginAttemptsService,
                            StudentRepository studentRepository,
                            PersonRepository personRepository,
-                           EmployeeRepository employeeRepository) {
+                           EmployeeRepository employeeRepository,
+                           EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
         this.employeeRepository = employeeRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -128,6 +132,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
            return null;
        }
 
+    }
+
+    @Override
+    public User forgetPassword(User user) throws MessagingException {
+        String username = user.getUsername();
+        User newUser = this.userRepository.findUserByUsername(username);
+        if(newUser == null){
+            throw new UserNotFoundException("username does not exist");
+        }
+        String password = user.getPassword();
+        String encryptedPassword = encodePassword(password);
+        newUser.setPassword(encryptedPassword);
+        newUser.setLocked(false);
+        newUser.setActive(true);
+
+
+        Student studentAccount = this.studentRepository.findStudentByUserId(newUser.getId());
+        Employee employeeAccount = this.employeeRepository.findEmployeeByUserId(newUser.getId());
+
+        if(studentAccount != null && studentAccount.getPerson().getEmail() != null) {
+            emailService.sendNewPasswordEmail(studentAccount.getPerson().getEmail(),studentAccount.getPerson().getFirstName(),password);
+        } else if (employeeAccount != null && employeeAccount.getPerson().getEmail() != null) {
+            emailService.sendNewPasswordEmail(employeeAccount.getPerson().getEmail(),employeeAccount.getPerson().getFirstName(),password);
+        }
+        userRepository.save(newUser);
+        return newUser;
     }
 
     private String generateUserId(){
