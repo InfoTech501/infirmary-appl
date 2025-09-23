@@ -16,9 +16,9 @@ import java.util.List;
 public interface MonthlyAilmentReportService {
     /**
      * Generates a monthly ailment report with ailment descriptions and student counts.
-     * @param month The target month (1-12)
-     * @param year The target year (e.g., 2025)
+     * @param startDate start of the date range
+     * @param endDate end of the date range
      * @return JSON-compatible list or a message map
      */
-    List<MonthlyAilmentReport> generateMonthlyAilmentsReport(int month, int year);
+    List<MonthlyAilmentReport> generateMonthlyAilmentsReport(String startDate, String endDate);
 }

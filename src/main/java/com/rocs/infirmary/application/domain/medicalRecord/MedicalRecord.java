@@ -9,11 +9,11 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * {@code MEDICAL_RECORD} represents a medical record associated to patient, capturing visit details, vital signs, and relationships to ailments, medical history, and attending nurse.
+ * {@code medical_record} represents a medical record associated to patient, capturing visit details, vital signs, and relationships to ailments, medical history, and attending nurse.
  * */
 @Entity
 @Data
-@Table(name = "MEDICAL_RECORD")
+@Table(name = "medical_record")
 public class MedicalRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

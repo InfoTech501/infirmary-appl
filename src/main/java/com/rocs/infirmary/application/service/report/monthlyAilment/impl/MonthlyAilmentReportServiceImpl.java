@@ -31,25 +31,21 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
 
     /**
      * Generates a monthly ailment report with ailment descriptions and student counts.
-     * @param month The target month (1-12)
-     * @param year The target year (e.g., 2025)
+     * @param startDate start of the date range
+     * @param endDate end of the date range
      * @return JSON-compatible list or a message map
      */
     @Override
-    public List<MonthlyAilmentReport> generateMonthlyAilmentsReport(int month, int year) {
-        LOGGER.info("Generating monthly ailments report for {}/{}", month, year);
-
+    public List<MonthlyAilmentReport> generateMonthlyAilmentsReport(String startDate, String endDate) {
         try {
-            LocalDate startDate = LocalDate.of(year, month, 1);
-            LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-
-            Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date end = Date.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant());
-
+            LocalDate startDateStr = LocalDate.parse(startDate);
+            LocalDate endDateStr = LocalDate.parse(endDate);
+            Date start = Date.from(startDateStr.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date end = Date.from(endDateStr.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant());
             List<MedicalRecord> records = medicalRecordRepository.findByVisitDateBetween(start, end);
 
             if (records.isEmpty()) {
-                LOGGER.warn("No medical record was found. {}/{}", month,year );
+                LOGGER.warn("No medical record was found. {}/{}", startDate,endDate );
                 return new ArrayList<>();
             }
 

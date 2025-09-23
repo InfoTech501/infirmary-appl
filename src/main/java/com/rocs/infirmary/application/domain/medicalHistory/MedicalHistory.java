@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 /**
- * {@code MEDICAL_HISTORY} represents the patient's medical history entry
+ * {@code medical_history} represents the patient's medical history entry
  * */
 @Entity
 @Data
-@Table(name = "MEDICAL_HISTORY")
+@Table(name = "medical_history")
 public class MedicalHistory {
   @Id
   @Column(name = "med_history_id")

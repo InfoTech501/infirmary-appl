@@ -36,13 +36,13 @@ public class MonthlyAilmentReportController {
     /**
      * Handles the generation of monthly common ailment reports.
      *
-     * @param month the month for which the report is to be generated (1–12)
-     * @param year the year for which the report is to be generated (e.g. 2023, 2024, 2025)
+     * @param startDate start of the date range
+     * @param endDate end of the date range
      * @return a {@link ResponseEntity} containing the generated ailment report
      */
     @GetMapping("/reports")
-    public ResponseEntity<List<MonthlyAilmentReport>> getMonthlyCommonAilments(@RequestParam int month, @RequestParam int year) {
-        List<MonthlyAilmentReport> report = monthlyAilmentReportService.generateMonthlyAilmentsReport(month, year);
+    public ResponseEntity<List<MonthlyAilmentReport>> getMonthlyCommonAilments(@RequestParam String startDate, @RequestParam String endDate) {
+        List<MonthlyAilmentReport> report = monthlyAilmentReportService.generateMonthlyAilmentsReport(startDate,endDate);
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 }
