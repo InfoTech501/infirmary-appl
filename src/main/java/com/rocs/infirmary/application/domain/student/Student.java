@@ -1,11 +1,14 @@
 package com.rocs.infirmary.application.domain.student;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rocs.infirmary.application.domain.guardian.Guardian;
+import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 
 import java.io.Serializable;
 /**
@@ -17,6 +20,7 @@ public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long lrn;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -24,8 +28,19 @@ public class Student implements Serializable {
     private Person person;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "section_section_id")
     private Section section;
 
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "guardian_id")
+    private Guardian guardian;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
+    private List<MedicalHistory> medicalHistories;
+
+
+
 }
