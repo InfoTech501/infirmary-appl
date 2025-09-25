@@ -12,9 +12,10 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "section_id")
     private Long id;
+    @Column(name = "adviser_id")
+    private Long adviserId;
     private String strand;
     @Column(name = "grade_level")
     private String gradeLevel;
     private String section;
-
 }
