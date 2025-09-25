@@ -1,7 +1,7 @@
 package com.rocs.infirmary.application.domain.medical.history;
 
 import com.rocs.infirmary.application.domain.student.Student;
-import com.rocs.infirmary.application.domain.condition.Condition;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,9 +31,6 @@ public class MedicalHistory {
     private Student student;
 
 
-    @ManyToOne
-    @JoinColumn(name = "condition_id")
-    private Condition condition;
 
 
 
