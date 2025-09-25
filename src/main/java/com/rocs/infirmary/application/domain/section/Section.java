@@ -3,16 +3,15 @@ package com.rocs.infirmary.application.domain.section;
 import jakarta.persistence.*;
 import lombok.Data;
 /**
- * {@code Section} represents a school section where students belong.
- * It stores details like adviser, strand, grade level, and section name.
- */
+ * this represents the section entity that holds the information about the section
+ * */
 @Data
 @Entity
 public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "section_id")
-    private Long sectionId;
+    private Long id;
     @Column(name = "adviser_id")
     private Long adviserId;
     private String strand;
