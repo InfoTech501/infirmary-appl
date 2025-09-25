@@ -52,11 +52,11 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
             LOGGER.error("student not found");
             throw new StudentNotFoundException("Student Not Found!");
         }
-        List<MedicalHistory> medicalHistories = student.getMedicalHistories();
-        if (medicalHistories == null || medicalHistories.isEmpty()) {
-            LOGGER.error("No medical history");
-            throw new MedicalHistoryNotFoundException("No medical history available");
-        }
+//        List<MedicalHistory> medicalHistories = student.getMedicalHistories();
+//        if (medicalHistories == null || medicalHistories.isEmpty()) {
+//            LOGGER.error("No medical history");
+//            throw new MedicalHistoryNotFoundException("No medical history available");
+//        }
         return student;
     }
 }

@@ -1,5 +1,6 @@
 package com.rocs.infirmary.application.domain.medical.history;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rocs.infirmary.application.domain.student.Student;
 
 import jakarta.persistence.*;
@@ -28,6 +29,7 @@ public class MedicalHistory {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
+    @JsonIgnore
     private Student student;
 
 
