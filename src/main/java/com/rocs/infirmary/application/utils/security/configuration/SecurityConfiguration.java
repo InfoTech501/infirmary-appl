@@ -50,10 +50,11 @@ public class SecurityConfiguration {
      * @param bCryptPasswordEncoder password encoder (BCrypt)
      * @param authenticationConfiguration configuration for authentication management
      */
+    @Autowired
     public SecurityConfiguration(JwtAuthorizationFilter jwtAuthorizationFilter,
                                  JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                  AuthenticationEntryPoint authenticationEntryPoint,
-                                 @Qualifier("userDetailsService")
+                                 @Qualifier( value = "userDetailsService")
                                  UserDetailsService userDetailsService,
                                  BCryptPasswordEncoder bCryptPasswordEncoder,
                                  AuthenticationConfiguration authenticationConfiguration) {
