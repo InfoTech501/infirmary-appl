@@ -20,6 +20,7 @@ import static com.rocs.infirmary.application.utils.security.constants.SecurityCo
  * The {@code UserController} class use to implement the registration and login functionality of Infirmary web application
  * */
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
