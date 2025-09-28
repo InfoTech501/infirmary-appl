@@ -3,10 +3,7 @@ package com.rocs.infirmary.application.exception.handling;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.http.response.HttpResponse;
 import com.rocs.infirmary.application.exception.constants.ExceptionConstants;
-import com.rocs.infirmary.application.exception.domain.EmailNotFoundException;
-import com.rocs.infirmary.application.exception.domain.MedicineNotFoundException;
-import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
-import com.rocs.infirmary.application.exception.domain.UsernameExistException;
+import com.rocs.infirmary.application.exception.domain.*;
 import jakarta.persistence.NoResultException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -89,6 +86,10 @@ public class ExceptionHandling implements ErrorController {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<HttpResponse> noHandlerFoundException(NoHandlerFoundException e) {
         return createHttpResponse(BAD_REQUEST, "There is no mapping for this URL");
+    }
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<HttpResponse>studentNotFoundException(StudentNotFoundException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
     @RequestMapping(ERROR_PATH)
     public ResponseEntity<HttpResponse> notFound404() {
