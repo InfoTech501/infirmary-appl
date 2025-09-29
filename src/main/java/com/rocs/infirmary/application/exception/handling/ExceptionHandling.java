@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.http.response.HttpResponse;
 import com.rocs.infirmary.application.exception.constants.ExceptionConstants;
 import com.rocs.infirmary.application.exception.domain.EmailNotFoundException;
+import com.rocs.infirmary.application.exception.domain.FrequentVisitReportException;
 import com.rocs.infirmary.application.exception.domain.MedicineNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UsernameExistException;
@@ -78,6 +79,11 @@ public class ExceptionHandling implements ErrorController {
     }
     @ExceptionHandler(UsernameExistException.class)
     public ResponseEntity<HttpResponse> usernameExistException(NoResultException exception){
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+    
+    @ExceptionHandler(FrequentVisitReportException.class)
+    public ResponseEntity<HttpResponse> frequentVisitReportException(FrequentVisitReportException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
