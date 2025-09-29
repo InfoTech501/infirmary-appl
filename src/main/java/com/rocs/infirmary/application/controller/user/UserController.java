@@ -1,9 +1,11 @@
 package com.rocs.infirmary.application.controller.user;
 
+import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.service.user.UserService;
 import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import static com.rocs.infirmary.application.utils.security.constants.SecurityCo
  * The {@code UserController} class use to implement the registration and login functionality of Infirmary web application
  * */
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
@@ -58,13 +61,23 @@ public class UserController {
     }
     /**
      * {@code register} used to handle the registration request, this accepts the object
-     * @param user that contains the credential provided by the user
+     * @param registration that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
      * */
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user){
-        User newUser = this.userService.registerUser(user);
-        return new ResponseEntity<>(newUser,HttpStatus.OK);
+    public ResponseEntity<Registration> register(@RequestBody Registration registration){
+        Registration registeredUser = this.userService.registerUser(registration);
+        return new ResponseEntity<>(registeredUser,HttpStatus.OK);
+    }
+    /**
+     * {@code forgetPassword} used to handle the forget password request, this accepts the object
+     * @param user that contains the credential provided by the user
+     * @return ResponseEntity containing the user object, and  Http Status
+     * */
+    @PostMapping("/forget-password")
+    public ResponseEntity<String> forgetPassword(@RequestBody User user) throws MessagingException {
+        this.userService.forgetPassword(user);
+        return new ResponseEntity<>("Email is sent",HttpStatus.OK);
     }
 
     private void authUserLogin(String username, String password){

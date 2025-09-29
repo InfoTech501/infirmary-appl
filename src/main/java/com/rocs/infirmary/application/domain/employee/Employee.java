@@ -1,44 +1,32 @@
 package com.rocs.infirmary.application.domain.employee;
 
 import com.rocs.infirmary.application.domain.department.Department;
+import com.rocs.infirmary.application.domain.person.Person;
+import com.rocs.infirmary.application.domain.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.Date;
-
 /**
- * {@code employee} represents a staff member in the infirmary system,
- * linking to personal and departmental details.
- */
+ * this holds the credential of the employee
+ * */
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Employee extends Department implements Serializable {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-
-    @Column(name = "person_id")
-    private Long personId;
-
-    @Column(name = "department_id")
-    private Long departmentId;
-
     @Column(name = "employee_number")
-    private Long employeeNumber;
-
+    private int employeeNumber;
     @Column(name = "date_employed")
     private Date dateEmployed;
-
     @Column(name = "employment_status")
     private String employmentStatus;
 
-    @OneToOne
-    @JoinColumn(name = "department_id", insertable = false, updatable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    private Person person;
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user;
+    @ManyToOne(cascade = CascadeType.ALL)
     private Department department;
 }

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * */
 @Entity
 @Data
-public class Student extends Person implements Serializable {
+public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

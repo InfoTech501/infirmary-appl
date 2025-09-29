@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 /**
- * {@code SectionRepository} is an interface to the Section repository.
- */
+ * this is an interface of person repository
+ * */
 public interface SectionRepository extends JpaRepository<Section, Long> {
+
     /**
      * Finds list of section by their cluster.
      *

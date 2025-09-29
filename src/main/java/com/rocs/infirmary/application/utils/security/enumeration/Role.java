@@ -6,9 +6,9 @@ import static com.rocs.infirmary.application.utils.security.constants.authority.
  */
 public enum Role {
     /**
-     * role for general user with read access
+     * role for student user with read access
      * */
-    USER_ROLE(USER_AUTHORITIES),
+    STUDENT_ROLE(STUDENT_AUTHORITIES),
     /**
      * role for teacher with create,read and update access
      * */

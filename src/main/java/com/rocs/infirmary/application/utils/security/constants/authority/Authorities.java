@@ -6,7 +6,7 @@ public class Authorities {
     /**
      * authorities for general users
      * */
-    public static String[] USER_AUTHORITIES = {"user:read"};
+    public static String[] STUDENT_AUTHORITIES = {"user:read"};
     /**
      * Authorities for teacher
      * */
