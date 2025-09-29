@@ -9,4 +9,11 @@ import java.util.List;
  * */
 public interface SectionRepository extends JpaRepository<Section, Long> {
 
+    /**
+     * Finds list of section by their cluster.
+     *
+     * @param section of section
+     * @return a list of sections with the specified section
+     */
+    List<Section> getSectionBySectionName (String section);
 }
