@@ -28,7 +28,6 @@ public class Student implements Serializable {
     private Person person;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "section_section_id")
     private Section section;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -38,9 +37,10 @@ public class Student implements Serializable {
     @JoinColumn(name = "guardian_id")
     private Guardian guardian;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
-    private List<MedicalHistory> medicalHistories;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "med_history_id")
+    private MedicalHistory medicalHistory;
 
 
 }

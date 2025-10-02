@@ -13,13 +13,12 @@ public class Section {
     @Column(name = "section_id")
     private Long id;
 
-    @Column(name = "strand")
+
     private String strand;
 
     @Column(name = "grade_level")
     private String gradeLevel;
 
-    @Column(name = "section")
     private String section;
 
 }

@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.service.student.profile.exceptions;
+package com.rocs.infirmary.application.service.student.health.profile.exceptions;
 
 /**
  * StudentNotFoundException is a custom exception thrown when a specific

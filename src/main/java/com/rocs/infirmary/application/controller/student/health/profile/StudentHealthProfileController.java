@@ -1,13 +1,11 @@
 package com.rocs.infirmary.application.controller.student.health.profile;
 
-
-import com.rocs.infirmary.application.domain.student.Student;
-import com.rocs.infirmary.application.service.student.profile.StudentHealthProfileService;
+import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileDTO;
+import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 /**
  * StudentHealthProfileController handles requests for retrieving
@@ -18,26 +16,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/student")
 public class StudentHealthProfileController {
 
-    private StudentHealthProfileService studentHealthProfileService;
+    private final StudentHealthProfileService studentHealthProfileService;
 
-    /**
-     * Constructor for StudentHealthProfileController.
-     * @param studentHealthProfileService the service used to handle student health profile operations
-     */
     @Autowired
     public StudentHealthProfileController(StudentHealthProfileService studentHealthProfileService) {
         this.studentHealthProfileService = studentHealthProfileService;
     }
 
     /**
-     * retrieves a student's health profile by their ID
+     * Retrieves a student's health profile by their ID.
      * @param id is the unique identifier of a student
-     * returns the student's health profile with all the details of the student
+     * @return the student's health profile DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Student>findStudentHealthProfileById(@PathVariable("id") long id){
-        return new  ResponseEntity<>(studentHealthProfileService.findStudentHealthProfileById(id), HttpStatus.OK);
+    public ResponseEntity<StudentHealthProfileDTO> findStudentHealthProfileById(@PathVariable("id") long id) {
+        StudentHealthProfileDTO dto = studentHealthProfileService.getStudentHealthProfileById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }
-
-

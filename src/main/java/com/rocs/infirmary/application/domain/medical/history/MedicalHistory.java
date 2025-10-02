@@ -20,14 +20,12 @@ public class MedicalHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "med_history_id")
-    private Long medHistoryId;
+    private Long id;
 
-
-    @Column(name = "description")
     private String description;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
     @JsonIgnore
     private Student student;
