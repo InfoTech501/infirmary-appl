@@ -12,4 +12,12 @@ public class MonthlyAilmentReportException extends RuntimeException {
   public MonthlyAilmentReportException(String message, Throwable cause) {
     super(message, cause);
   }
+
+  /**
+   * Constructs an exception with the specified message.
+   * @param message the detail message
+   */
+  public MonthlyAilmentReportException(String message) {
+    super(message);
+  }
 }

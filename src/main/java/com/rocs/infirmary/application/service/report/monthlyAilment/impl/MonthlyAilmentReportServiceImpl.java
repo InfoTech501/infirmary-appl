@@ -15,6 +15,9 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A service implementation that handles the generation of common monthly ailment report
+ */
 @Service
 public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MonthlyAilmentReportServiceImpl.class);
@@ -45,8 +48,8 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
             List<MedicalRecord> records = medicalRecordRepository.findByVisitDateBetween(start, end);
 
             if (records.isEmpty()) {
-                LOGGER.warn("No medical record was found. {}/{}", startDate,endDate );
-                return new ArrayList<>();
+                LOGGER.warn("No medical record was found. {}/{}", startDate,endDate);
+                throw new MonthlyAilmentReportException("No medical records found");
             }
 
             Map<String, Long> ailmentCounts = processAilmentCounts(records);

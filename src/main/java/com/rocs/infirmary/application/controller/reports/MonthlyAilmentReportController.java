@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/monthly-ailment")
-@Slf4j
 public class MonthlyAilmentReportController {
   private final MonthlyAilmentReportService monthlyAilmentReportService;
 
