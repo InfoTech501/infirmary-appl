@@ -12,6 +12,7 @@ import lombok.Data;
 public class MedicalHistory {
   @Id
   @Column(name = "med_history_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long medHistoryId;
   private String description;
 }
