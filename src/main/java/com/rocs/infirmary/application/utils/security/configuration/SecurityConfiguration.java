@@ -50,10 +50,11 @@ public class SecurityConfiguration {
      * @param bCryptPasswordEncoder password encoder (BCrypt)
      * @param authenticationConfiguration configuration for authentication management
      */
+    @Autowired
     public SecurityConfiguration(JwtAuthorizationFilter jwtAuthorizationFilter,
                                  JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                  AuthenticationEntryPoint authenticationEntryPoint,
-                                 @Qualifier(value = "userDetailsService")
+                                 @Qualifier( value = "userDetailsService")
                                  UserDetailsService userDetailsService,
                                  BCryptPasswordEncoder bCryptPasswordEncoder,
                                  AuthenticationConfiguration authenticationConfiguration) {
@@ -92,8 +93,14 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedMethods(List.of("https://localhost:8080","http://localhost:8081","http://localhost:3000"));
+        corsConfiguration.setAllowedOrigins(List.of("https://localhost:8080","http://localhost:8081","http://localhost:3000"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setExposedHeaders(List.of(
+                "Authorization",
+                "x-xsrf-token",
+                "Access-Control-Allow-Headers",
+                "Jwt-Token",
+                "Uid"));
         corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
@@ -110,6 +117,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).
+                cors(cors -> corsConfigurationSource()).
                 sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll().anyRequest().authenticated()).
                 exceptionHandling(e -> {
