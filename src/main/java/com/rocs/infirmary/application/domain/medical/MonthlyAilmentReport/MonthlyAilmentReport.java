@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport;
+package com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport;
 
 import lombok.Data;
 

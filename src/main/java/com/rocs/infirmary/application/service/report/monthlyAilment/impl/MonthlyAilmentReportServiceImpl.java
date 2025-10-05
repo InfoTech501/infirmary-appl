@@ -1,8 +1,8 @@
 package com.rocs.infirmary.application.service.report.monthlyAilment.impl;
 
-import com.rocs.infirmary.application.domain.medicalRecord.MedicalRecord;
-import com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport.MonthlyAilmentReport;
-import com.rocs.infirmary.application.repository.report.monthlyAilment.MedicalRecordRepository;
+import com.rocs.infirmary.application.domain.medical.record.MedicalRecord;
+import com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport.MonthlyAilmentReport;
+import com.rocs.infirmary.application.repository.medical.record.MedicalRecordRepository;
 import com.rocs.infirmary.application.exception.domain.MonthlyAilmentReportException;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
 import org.slf4j.Logger;
@@ -62,8 +62,8 @@ public class MonthlyAilmentReportServiceImpl implements MonthlyAilmentReportServ
     }
 
     private Map<String, Long> processAilmentCounts(List<MedicalRecord> records) {
-        return records.stream().filter(record ->record.getAilment() != null && record.getAilment().getDescription() !=null)
-                .collect(Collectors.groupingBy(r -> r.getAilment().getDescription(),Collectors.counting()));
+        return records.stream().filter(record ->record.getAilments() != null && record.getAilments().getDescription() !=null)
+                .collect(Collectors.groupingBy(r -> r.getAilments().getDescription(),Collectors.counting()));
     }
 
     private List<MonthlyAilmentReport> generateReportItems(Map<String, Long> ailmentCounts) {

@@ -1,8 +1,7 @@
 package com.rocs.infirmary.application.controller.reports;
 
-import com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport.MonthlyAilmentReport;
+import com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport.MonthlyAilmentReport;
 import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

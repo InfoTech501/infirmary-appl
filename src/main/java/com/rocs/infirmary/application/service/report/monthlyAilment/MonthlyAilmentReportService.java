@@ -1,6 +1,6 @@
 package com.rocs.infirmary.application.service.report.monthlyAilment;
 
-import com.rocs.infirmary.application.domain.medicalRecord.MonthlyAilmentReport.MonthlyAilmentReport;
+import com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport.MonthlyAilmentReport;
 
 import java.util.List;
 
