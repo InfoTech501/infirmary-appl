@@ -2,7 +2,6 @@ package com.rocs.infirmary.application.exception.handling;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.http.response.HttpResponse;
-import com.rocs.infirmary.application.exception.constants.ExceptionConstants;
 import com.rocs.infirmary.application.exception.domain.*;
 import jakarta.persistence.NoResultException;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -89,6 +88,17 @@ public class ExceptionHandling implements ErrorController {
     }
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<HttpResponse>studentNotFoundException(StudentNotFoundException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+    /**
+     * Handles the {@link SectionNotFoundException} when a section cannot be found.
+     * Returns an HTTP response with a bad request status and the exception message.
+     *
+     * @param e the thrown SectionNotFoundException
+     * @return a ResponseEntity containing the HTTP response and error message
+     */
+    @ExceptionHandler(SectionNotFoundException.class)
+    public ResponseEntity<HttpResponse>sectionNotFoundException(SectionNotFoundException e){
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
     @RequestMapping(ERROR_PATH)
