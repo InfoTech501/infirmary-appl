@@ -1,6 +1,6 @@
 package com.rocs.infirmary.application.controller.student.health.profile;
 
-import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileDTO;
+import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class StudentHealthProfileController {
      * @return the student's health profile DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<StudentHealthProfileDTO> findStudentHealthProfileById(@PathVariable("id") long id) {
-        StudentHealthProfileDTO dto = studentHealthProfileService.getStudentHealthProfileById(id);
+    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileById(@PathVariable("id") long id) {
+        StudentHealthProfileResponse dto = studentHealthProfileService.getStudentHealthProfileById(id);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

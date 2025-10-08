@@ -1,7 +1,7 @@
 package com.rocs.infirmary.application.service.student.health.profile.impl;
 
 import com.rocs.infirmary.application.domain.student.Student;
-import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileDTO;
+import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import com.rocs.infirmary.application.service.student.health.profile.exceptions.StudentNotFoundException;
@@ -23,7 +23,7 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
     }
 
     @Override
-    public StudentHealthProfileDTO getStudentHealthProfileById(Long id) {
+    public StudentHealthProfileResponse getStudentHealthProfileById(Long id) {
         Student student = studentRepository.findStudentHealthProfileById(id);
         if (student == null) {
             LOGGER.error("student not found");
@@ -32,8 +32,8 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         return convertDto(student);
     }
 
-    private StudentHealthProfileDTO convertDto(Student student) {
-        StudentHealthProfileDTO studentHealthProfile = new StudentHealthProfileDTO();
+    private StudentHealthProfileResponse convertDto(Student student) {
+        StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
 
         studentHealthProfile.setStudent(student);
         studentHealthProfile.setPerson(student.getPerson());

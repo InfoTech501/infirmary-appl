@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.guardian.Guardian;
+import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import jakarta.persistence.*;
 import lombok.Data;
 
