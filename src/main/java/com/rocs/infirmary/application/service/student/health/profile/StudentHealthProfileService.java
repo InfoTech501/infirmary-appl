@@ -6,9 +6,8 @@ import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthPr
 public interface StudentHealthProfileService {
 
     /**
-     * finds a student by id
+     * finds a student health profile by id
      * @param id is the unique identifier of the student
-     * @return User
      * */
     StudentHealthProfileDTO getStudentHealthProfileById(Long id);
 

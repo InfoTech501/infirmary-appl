@@ -3,6 +3,9 @@ package com.rocs.infirmary.application.domain.guardian;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * {@code Guardian} represents the student's guardian, this holds basic information about the guardian
+ * */
 @Entity
 @Data
 @Table(name = "guardian_details")

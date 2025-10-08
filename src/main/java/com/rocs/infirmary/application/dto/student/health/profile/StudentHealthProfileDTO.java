@@ -1,42 +1,32 @@
 package com.rocs.infirmary.application.dto.student.health.profile;
+import com.rocs.infirmary.application.domain.guardian.Guardian;
+import com.rocs.infirmary.application.domain.medicalHistory.MedicalHistory;
+import com.rocs.infirmary.application.domain.person.Person;
+import com.rocs.infirmary.application.domain.section.Section;
+import com.rocs.infirmary.application.domain.student.Student;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import java.util.Date;
+import jakarta.persistence.*;
 
 @Data
 public class StudentHealthProfileDTO {
 
-    //stud
-    private Long studentId;
-    private Long lrn;
 
-    //prson
-    private Long personId;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private int age;
-    private Date birthdate;
-    private String gender;
-    private String email;
-    private String address;
-    private String contactNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Student student;
 
-    //section
-    private Long sectionId;
-    private String strand;
-    private String gradeLevel;
-    private String section;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Person person;
 
-    //guardian
-    private Long guardianId;
-    private String guardianName;
-    private String guardianAddress;
-    private Long guardianNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Section section;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Guardian guardian;
 
-    //medicalHistory
-    private Long medicalHistoryId;
-    private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    private MedicalHistory medicalHistory;
 
 
 }

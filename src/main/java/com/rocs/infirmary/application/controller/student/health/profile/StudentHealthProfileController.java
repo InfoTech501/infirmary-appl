@@ -18,6 +18,10 @@ public class StudentHealthProfileController {
 
     private final StudentHealthProfileService studentHealthProfileService;
 
+    /**
+     * creates  constructor for {@code StudentHealthProfileController}
+     * @param studentHealthProfileService is the service layer for viewing a students health profile that includes all details
+     * */
     @Autowired
     public StudentHealthProfileController(StudentHealthProfileService studentHealthProfileService) {
         this.studentHealthProfileService = studentHealthProfileService;
