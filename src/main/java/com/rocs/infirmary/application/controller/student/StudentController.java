@@ -41,8 +41,8 @@ public class StudentController {
 
     }
 
-    @GetMapping("/health-profile/{lrn}")
-    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@PathVariable("lrn") Long lrn) {
+    @GetMapping("/health-profile")
+    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam("lrn") Long lrn) {
         StudentHealthProfileResponse dto = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
