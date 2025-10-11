@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.service.report.monthlyAilment;
+package com.rocs.infirmary.application.service.dashboard.monthly.ailment;
 
 import com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport.MonthlyAilmentReport;
 

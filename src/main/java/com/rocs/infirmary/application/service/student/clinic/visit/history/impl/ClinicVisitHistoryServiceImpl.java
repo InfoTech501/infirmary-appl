@@ -1,12 +1,14 @@
-package com.rocs.infirmary.application.service.clinic.visit.history.impl;
+package com.rocs.infirmary.application.service.student.clinic.visit.history.impl;
 
-import com.rocs.infirmary.application.domain.clinic.visit.history.ClinicVisitHistory;
+
+
+import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.domain.medical.record.MedicalRecord;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.repository.medical.record.MedicalRecordRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
-import com.rocs.infirmary.application.service.clinic.visit.history.ClinicVisitHistoryService;
+import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

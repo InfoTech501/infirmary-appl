@@ -1,10 +1,10 @@
-package com.rocs.infirmary.application.service.report.monthlyAilment.impl;
+package com.rocs.infirmary.application.service.dashboard.monthly.ailment.impl;
 
 import com.rocs.infirmary.application.domain.medical.record.MedicalRecord;
 import com.rocs.infirmary.application.domain.medical.MonthlyAilmentReport.MonthlyAilmentReport;
 import com.rocs.infirmary.application.repository.medical.record.MedicalRecordRepository;
 import com.rocs.infirmary.application.exception.domain.MonthlyAilmentReportException;
-import com.rocs.infirmary.application.service.report.monthlyAilment.MonthlyAilmentReportService;
+import com.rocs.infirmary.application.service.dashboard.monthly.ailment.MonthlyAilmentReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

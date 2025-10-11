@@ -1,13 +1,9 @@
-package com.rocs.infirmary.application.domain.clinic.visit.history;
+package com.rocs.infirmary.application.domain.student.clinic.visit.history;
 
-import com.rocs.infirmary.application.domain.medical.record.MedicalRecord;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
+
 /**
  * this is used to handle or information for clinic visit history
  * */
