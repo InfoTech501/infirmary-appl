@@ -19,7 +19,7 @@ public class MedicalHistory {
   private String description;
 
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "student_id")
   @JsonIgnore
   private Student student;
