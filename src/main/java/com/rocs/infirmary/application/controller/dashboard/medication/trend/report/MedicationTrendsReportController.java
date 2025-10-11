@@ -1,7 +1,7 @@
-package com.rocs.infirmary.application.controller.medication.trend;
+package com.rocs.infirmary.application.controller.dashboard.medication.trend.report;
 
 import com.rocs.infirmary.application.domain.medicine.trend.report.MedicineTrendReport;
-import com.rocs.infirmary.application.service.medication.trend.MedicationTrendReportService;
+import com.rocs.infirmary.application.service.dashboard.medication.trend.report.MedicationTrendReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

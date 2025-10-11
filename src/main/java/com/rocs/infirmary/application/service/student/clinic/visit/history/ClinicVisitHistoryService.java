@@ -1,6 +1,6 @@
-package com.rocs.infirmary.application.service.clinic.visit.history;
+package com.rocs.infirmary.application.service.student.clinic.visit.history;
 
-import com.rocs.infirmary.application.domain.clinic.visit.history.ClinicVisitHistory;
+import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 
 import java.util.List;

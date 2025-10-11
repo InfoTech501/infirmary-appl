@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.service.medication.trend.impl;
+package com.rocs.infirmary.application.service.dashboard.medication.trend.report.impl;
 
 import com.rocs.infirmary.application.domain.medicine.Medicine;
 import com.rocs.infirmary.application.domain.medicine.administered.MedicineAdministered;
@@ -6,15 +6,11 @@ import com.rocs.infirmary.application.domain.medicine.trend.report.MedicineTrend
 import com.rocs.infirmary.application.exception.domain.MedicineNotFoundException;
 import com.rocs.infirmary.application.repository.medicine.MedicineRepository;
 import com.rocs.infirmary.application.repository.medicine.administered.MedicineAdministeredRepository;
-import com.rocs.infirmary.application.service.medication.trend.MedicationTrendReportService;
+import com.rocs.infirmary.application.service.dashboard.medication.trend.report.MedicationTrendReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
