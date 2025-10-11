@@ -15,7 +15,8 @@ public class MedicalHistory {
   @Id
   @Column(name = "med_history_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long medHistoryId;
+  private Long id;
+
   private String description;
 
 

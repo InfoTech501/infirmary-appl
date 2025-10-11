@@ -36,11 +36,6 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
 
         studentHealthProfile.setStudent(student);
-        studentHealthProfile.setPerson(student.getPerson());
-        studentHealthProfile.setSection(student.getSection());
-        studentHealthProfile.setGuardian(student.getGuardian());
-        studentHealthProfile.setMedicalHistory(student.getMedicalHistory());
-
 
         return studentHealthProfile;
     }
