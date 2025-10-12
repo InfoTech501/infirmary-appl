@@ -10,12 +10,20 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *  Implementation of the StudentHealthProfileService interface.
+ * */
 @Service
 public class StudentHealthProfileServiceImpl implements StudentHealthProfileService {
 
     private final StudentRepository studentRepository;
     private static Logger LOGGER = LoggerFactory.getLogger(StudentHealthProfileServiceImpl.class);
 
+    /**
+     * this creates a constructor for {@code StudentHealthProfileServiceImpl}
+     *
+     * @param studentRepository represents the student repository
+     * */
 
     @Autowired
     public StudentHealthProfileServiceImpl(StudentRepository studentRepository) {
