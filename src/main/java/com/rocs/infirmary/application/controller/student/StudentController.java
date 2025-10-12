@@ -32,8 +32,9 @@ public class StudentController {
     @Autowired
     public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService) {
         this.studentService = studentService;
+        this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
-        this.studentHealthProfileService = studentHealthProfileService;
+
     }
 
     @PutMapping("/health-profile/update")
