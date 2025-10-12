@@ -27,12 +27,13 @@ public class StudentController {
     private final ClinicVisitHistoryService clinicVisitHistoryService;
     private final StudentHealthProfileService studentHealthProfileService;
 
+
+
     @Autowired
     public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService) {
-
         this.studentService = studentService;
         this.studentHealthProfileService = studentHealthProfileService;
-        this.clinicVisitHistoryService = clinicVisitHistoryService;
+        this.studentHealthProfileService = studentHealthProfileService;
     }
 
     @PutMapping("/health-profile/update")
@@ -40,6 +41,7 @@ public class StudentController {
         return new ResponseEntity<>(this.studentService.updateStudentHealthInformation(student), HttpStatus.OK);
 
     }
+
 
     @GetMapping("/health-profile")
     public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam("lrn") Long lrn) {
