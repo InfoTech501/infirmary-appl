@@ -23,8 +23,8 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
     }
 
     @Override
-    public StudentHealthProfileResponse getStudentHealthProfileById(Long id) {
-        Student student = studentRepository.findStudentHealthProfileById(id);
+    public StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn) {
+        Student student = studentRepository.findStudentHealthProfileByLrn(lrn);
         if (student == null) {
             LOGGER.error("student not found");
             throw new StudentNotFoundException("Student Not Found!");

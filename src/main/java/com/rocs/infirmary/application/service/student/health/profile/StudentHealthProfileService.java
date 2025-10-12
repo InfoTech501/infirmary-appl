@@ -7,9 +7,9 @@ public interface StudentHealthProfileService {
 
     /**
      * finds a student health profile by id
-     * @param id is the unique identifier of the student
+     * @param lrn is the unique identifier of the student
      * */
-    StudentHealthProfileResponse getStudentHealthProfileById(Long id);
+    StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn);
 
 
 }
