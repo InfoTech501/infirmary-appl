@@ -9,9 +9,6 @@ import lombok.Data;
 @Data
 public class StudentHealthProfileResponse {
 
-    /**
-     * The student entity that contains personal, health, and other related data for student health profile
-     */
     private Student student;
 
 
