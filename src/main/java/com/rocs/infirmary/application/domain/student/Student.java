@@ -1,7 +1,5 @@
 package com.rocs.infirmary.application.domain.student;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-//import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
