@@ -90,6 +90,10 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse>studentNotFoundException(StudentNotFoundException e){
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<HttpResponse>invalidTokenException(InvalidTokenException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
     /**
      * Handles the {@link SectionNotFoundException} when a section cannot be found.
      * Returns an HTTP response with a bad request status and the exception message.
