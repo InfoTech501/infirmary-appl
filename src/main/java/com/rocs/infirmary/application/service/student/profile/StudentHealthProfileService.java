@@ -1,6 +1,6 @@
 package com.rocs.infirmary.application.service.student.profile;
 
-import com.rocs.infirmary.application.domain.person.student.Student;
+import com.rocs.infirmary.application.domain.student.Student;
 /**
  * {@code StudentHealthProfileService} is an interface of the Student Health Profile
  * */

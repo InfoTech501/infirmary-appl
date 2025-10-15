@@ -2,8 +2,8 @@ package com.rocs.infirmary.application.service.student.profile.impl;
 
 import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
+import com.rocs.infirmary.application.domain.student.*;
 import com.rocs.infirmary.application.domain.section.Section;
-import com.rocs.infirmary.application.domain.person.student.Student;
 import com.rocs.infirmary.application.exception.domain.EmptyFieldException;
 import com.rocs.infirmary.application.exception.domain.StudentAlreadyExistException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
@@ -50,20 +50,23 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         }
         Student newStudent = new Student();
         newStudent.setLrn(student.getLrn());
-        newStudent.setFirstName(student.getFirstName());
-        newStudent.setMiddleName(student.getMiddleName());
-        newStudent.setLastName(student.getLastName());
-        newStudent.setAge(student.getAge());
-        newStudent.setBirthdate(student.getBirthdate());
-        newStudent.setGender(student.getGender());
-        newStudent.setEmail(student.getEmail());
-        newStudent.setAddress(student.getAddress());
-        newStudent.setContactNumber(student.getContactNumber());
+
+        Person person = new Person();
+        person.setFirstName(student.getPerson().getFirstName());
+        person.setMiddleName(student.getPerson().getMiddleName());
+        person.setLastName(student.getPerson().getLastName());
+        person.setAge(student.getPerson().getAge());
+        person.setBirthdate(student.getPerson().getBirthdate());
+        person.setGender(student.getPerson().getGender());
+        person.setEmail(student.getPerson().getEmail());
+        person.setAddress(student.getPerson().getAddress());
+        person.setContactNumber(student.getPerson().getContactNumber());
+        newStudent.setPerson(person);
 
         Section section = student.getSection();
         newStudent.setSection(section);
 
-        MedicalHistory medicalHistory = student.getMedicalHistory();
+        MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setDescription(student.getMedicalHistory().getDescription());
         newStudent.setMedicalHistory(medicalHistory);
 
@@ -76,31 +79,31 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
             LOGGER.error("Validation failed: LRN is missing");
             throw new EmptyFieldException(LRN_REQUIRED);
         }
-        if (student.getFirstName() == null || student.getFirstName().trim().isEmpty()) {
+        if (student.getPerson().getFirstName() == null || student.getPerson().getFirstName().trim().isEmpty()) {
             LOGGER.error("Validation failed: First name is missing");
             throw new EmptyFieldException(FIRST_NAME_REQUIRED);
         }
-        if (student.getLastName() == null || student.getLastName().trim().isEmpty()) {
+        if (student.getPerson().getLastName() == null || student.getPerson().getLastName().trim().isEmpty()) {
             LOGGER.error("Validation failed: Last name is missing");
             throw new EmptyFieldException(LAST_NAME_REQUIRED);
         }
-        if (student.getBirthdate() == null) {
+        if (student.getPerson().getBirthdate() == null) {
             LOGGER.error("Validation failed: Birthdate is missing");
             throw new EmptyFieldException(BIRTHDAY_REQUIRED);
         }
-        if (student.getGender() == null || student.getGender().trim().isEmpty()) {
+        if (student.getPerson().getGender() == null || student.getPerson().getGender().trim().isEmpty()) {
             LOGGER.error("Validation failed: Gender is missing");
             throw new EmptyFieldException(GENDER_REQUIRED);
         }
-        if (student.getEmail() == null || student.getEmail().trim().isEmpty()) {
+        if (student.getPerson().getEmail() == null || student.getPerson().getEmail().trim().isEmpty()) {
             LOGGER.error("Validation failed: Email is missing");
             throw new EmptyFieldException(EMAIL_REQUIRED);
         }
-        if (student.getAddress() == null || student.getAddress().trim().isEmpty()) {
+        if (student.getPerson().getAddress() == null || student.getPerson().getAddress().trim().isEmpty()) {
             LOGGER.error("Validation failed: Address is missing");
             throw new EmptyFieldException(ADDRESS_REQUIRED);
         }
-        if (student.getContactNumber() == null || student.getContactNumber().trim().isEmpty()) {
+        if (student.getPerson().getContactNumber() == null || student.getPerson().getContactNumber().trim().isEmpty()) {
             LOGGER.error("Validation failed: Contact number is missing");
             throw new EmptyFieldException(CONTACT_NUMBER_REQUIRED);
         }

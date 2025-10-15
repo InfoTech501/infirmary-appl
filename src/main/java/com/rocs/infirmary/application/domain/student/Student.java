@@ -1,6 +1,8 @@
 package com.rocs.infirmary.application.domain.student;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
+import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
@@ -28,4 +30,7 @@ public class Student implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private MedicalHistory medicalHistory;
 }
