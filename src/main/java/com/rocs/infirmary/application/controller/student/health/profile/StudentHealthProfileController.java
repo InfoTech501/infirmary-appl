@@ -1,6 +1,7 @@
 package com.rocs.infirmary.application.controller.student.health.profile;
 
 import com.rocs.infirmary.application.domain.student.Student;
+import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
 import com.rocs.infirmary.application.service.student.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

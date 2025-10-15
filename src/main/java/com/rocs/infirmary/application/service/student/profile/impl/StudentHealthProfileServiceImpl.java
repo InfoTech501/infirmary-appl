@@ -4,6 +4,7 @@ import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.student.*;
 import com.rocs.infirmary.application.domain.section.Section;
+import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.exception.domain.EmptyFieldException;
 import com.rocs.infirmary.application.exception.domain.StudentAlreadyExistException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
@@ -44,32 +45,23 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
 
         validateRequiredFields(student);
 
-        if (studentRepository.existsByLrn(student.getLrn())) {
+        Student existByLrn = studentRepository.findStudentByLrn(student.getLrn());
+
+        if (existByLrn != null) {
             LOGGER.error("Student with LRN {} already exists!", student.getLrn());
             throw new StudentAlreadyExistException(STUDENT_ALREADY_EXISTS);
         }
         Student newStudent = new Student();
         newStudent.setLrn(student.getLrn());
 
-        Person person = new Person();
-        person.setFirstName(student.getPerson().getFirstName());
-        person.setMiddleName(student.getPerson().getMiddleName());
-        person.setLastName(student.getPerson().getLastName());
-        person.setAge(student.getPerson().getAge());
-        person.setBirthdate(student.getPerson().getBirthdate());
-        person.setGender(student.getPerson().getGender());
-        person.setEmail(student.getPerson().getEmail());
-        person.setAddress(student.getPerson().getAddress());
-        person.setContactNumber(student.getPerson().getContactNumber());
+        Person person = student.getPerson();
         newStudent.setPerson(person);
 
         Section section = student.getSection();
         newStudent.setSection(section);
 
-        MedicalHistory medicalHistory = new MedicalHistory();
-        medicalHistory.setDescription(student.getMedicalHistory().getDescription());
+        MedicalHistory medicalHistory = student.getMedicalHistory();
         newStudent.setMedicalHistory(medicalHistory);
-
         return studentRepository.save(newStudent);
     }
 
