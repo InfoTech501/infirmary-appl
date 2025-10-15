@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.service.medication.trend;
+package com.rocs.infirmary.application.service.dashboard.medication.trend.report;
 
 import com.rocs.infirmary.application.domain.medicine.Medicine;
 import com.rocs.infirmary.application.domain.medicine.administered.MedicineAdministered;
