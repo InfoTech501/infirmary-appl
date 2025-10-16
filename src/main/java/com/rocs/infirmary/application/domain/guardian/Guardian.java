@@ -12,7 +12,7 @@ import lombok.Data;
 public class Guardian {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "guardian_id")
+    @Column(name = "stud_guardian_id")
     private Long id;
 
     @Column(name = "guardian_name")
@@ -22,5 +22,5 @@ public class Guardian {
     private String guardianAddress;
 
     @Column(name = "guardian_contact_number")
-    private Long guardianNumber;
+    private String guardianNumber;
 }

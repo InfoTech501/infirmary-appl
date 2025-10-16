@@ -39,7 +39,6 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         if (student==null) {
             LOGGER.error("Health profile not found");
             throw new StudentHealthProfileNotFoundException("Student Health profile not found");
-
         }
 
         StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
