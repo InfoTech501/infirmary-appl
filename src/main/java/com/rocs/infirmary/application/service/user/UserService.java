@@ -1,10 +1,13 @@
 package com.rocs.infirmary.application.service.user;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
-import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
+import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
 import jakarta.mail.MessagingException;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * {@code UserService} is an interface of the UserService
@@ -36,5 +39,11 @@ public interface UserService {
      *
      * @param user is the object that contains the user credentials
      * */
-    User forgetPassword(User user) throws MessagingException;
+    User resetPassword(String token,User user) throws ExecutionException, InvalidTokenException;
+    /**
+     * this is used to send a reset password request
+     *
+     * @param user is the object that contains the user credentials
+     * */
+    void forgetPassword(User user) throws MessagingException;
 }

@@ -4,23 +4,22 @@ import com.rocs.infirmary.application.domain.department.Department;
 import com.rocs.infirmary.application.domain.employee.Employee;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
-import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.exception.domain.EmailExistException;
+import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
 import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
 import com.rocs.infirmary.application.exception.domain.UsernameExistException;
 import com.rocs.infirmary.application.repository.department.DepartmentRepository;
 import com.rocs.infirmary.application.repository.employee.EmployeeRepository;
 import com.rocs.infirmary.application.repository.person.PersonRepository;
-import com.rocs.infirmary.application.repository.section.SectionRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.repository.user.UserRepository;
 import com.rocs.infirmary.application.service.email.EmailService;
 import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
+import com.rocs.infirmary.application.service.password.reset.token.PasswordResetTokenService;
 import com.rocs.infirmary.application.service.user.UserService;
-import com.rocs.infirmary.application.utils.security.enumeration.Role;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -29,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +36,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
 import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
@@ -53,6 +54,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private EmployeeRepository employeeRepository;
     private DepartmentRepository departmentRepository;
     private EmailService emailService;
+    private PasswordResetTokenService passwordResetTokenService;
+
+    @Value("${spring.application.base-url}")
+    private String baseUrl;
+    @Value("${spring.application.endpoints.reset-password}")
+    private String resetEndpoint;
+
     /**
      * this creates a constructor for UserServiceImpl that is used to inject the required dependencies
      * */
@@ -63,7 +71,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            PersonRepository personRepository,
                            EmployeeRepository employeeRepository,
                            DepartmentRepository departmentRepository,
-                           EmailService emailService) {
+                           EmailService emailService,
+                           PasswordResetTokenService passwordResetTokenService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
@@ -72,6 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.emailService = emailService;
+        this.passwordResetTokenService = passwordResetTokenService;
     }
 
     @Override
@@ -137,31 +147,47 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User forgetPassword(User user) throws MessagingException {
-        String username = user.getUsername();
-        User newUser = this.userRepository.findUserByUsername(username);
+    public User resetPassword(String token,User user) throws InvalidTokenException{
+        String validatedEmail = passwordResetTokenService.validateToken(token);
+        if(validatedEmail == null){
+            throw new InvalidTokenException("Token is already user or expired");
+        }
+        User newUser = this.userRepository.findUserByPersonEmail(validatedEmail);
         if(newUser == null){
             throw new UserNotFoundException("username does not exist");
         }
+
         String password = user.getPassword();
         String encryptedPassword = encodePassword(password);
         newUser.setPassword(encryptedPassword);
         newUser.setLocked(false);
         newUser.setActive(true);
 
-
-        Student studentAccount = this.studentRepository.findStudentByUserId(newUser.getId());
-        Employee employeeAccount = this.employeeRepository.findEmployeeByUserId(newUser.getId());
-
-        if(studentAccount != null && studentAccount.getPerson().getEmail() != null) {
-            emailService.sendNewPasswordEmail(studentAccount.getPerson().getEmail(),studentAccount.getPerson().getFirstName(),password);
-        } else if (employeeAccount != null && employeeAccount.getPerson().getEmail() != null) {
-            emailService.sendNewPasswordEmail(employeeAccount.getPerson().getEmail(),employeeAccount.getPerson().getFirstName(),password);
-        }
         userRepository.save(newUser);
+        passwordResetTokenService.evictTokenToCache(token);
+        passwordResetTokenService.evictEmailToCache(validatedEmail);
         return newUser;
     }
 
+    @Override
+    public void forgetPassword(User user) throws MessagingException {
+        User existingUser = this.userRepository.findUserByUsername(user.getUsername());
+        String userEmail = existingUser.getPerson().getEmail();
+        if(userEmail == null){
+            throw new EmailExistException("email not exist");
+        }
+        if(this.passwordResetTokenService.hasExceedMaxAttempts(userEmail)){
+            throw new InvalidTokenException("To many request attempt");
+        }
+        String token = passwordResetTokenService.generateToken(userEmail);
+        String resetUrl = buildResetPasswordUrl(token);
+        this.passwordResetTokenService.addUserToEmailRequestAttemptCache(userEmail);
+        this.emailService.sendNewTokenEmail(userEmail,resetUrl);
+    }
+
+    private String buildResetPasswordUrl(String token){
+       return baseUrl+ resetEndpoint+ token;
+    }
     private String generateUserId(){
        return RandomStringUtils.randomNumeric(10);
     }

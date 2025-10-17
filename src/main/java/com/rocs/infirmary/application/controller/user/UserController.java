@@ -3,6 +3,7 @@ package com.rocs.infirmary.application.controller.user;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
+import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
 import com.rocs.infirmary.application.service.user.UserService;
 import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
 import jakarta.mail.MessagingException;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
 
 import static com.rocs.infirmary.application.utils.security.constants.SecurityConstant.JWT_TOKEN_HEADER;
 
@@ -70,6 +73,19 @@ public class UserController {
         return new ResponseEntity<>(registeredUser,HttpStatus.OK);
     }
     /**
+     * {@code resetPassword} used to handle the reset password request, this accepts the object
+     * @param user that contains the credential provided by the user
+     * @return ResponseEntity containing the user object, and  Http Status
+     * */
+    @PostMapping("/reset-password")
+    public ResponseEntity<User> resetPassword(@RequestParam String token, @RequestBody User user) throws InvalidTokenException {
+        try {
+            return new ResponseEntity<>(this.userService.resetPassword(token, user),HttpStatus.OK);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
      * {@code forgetPassword} used to handle the forget password request, this accepts the object
      * @param user that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
@@ -77,7 +93,7 @@ public class UserController {
     @PostMapping("/forget-password")
     public ResponseEntity<String> forgetPassword(@RequestBody User user) throws MessagingException {
         this.userService.forgetPassword(user);
-        return new ResponseEntity<>("Email is sent",HttpStatus.OK);
+        return new ResponseEntity<>("Email sent successfully",HttpStatus.OK);
     }
 
     private void authUserLogin(String username, String password){

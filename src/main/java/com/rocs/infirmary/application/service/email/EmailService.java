@@ -35,6 +35,17 @@ public class EmailService {
             LOGGER.info("Message sent to email: {}", email);
         }
     }
+    /**
+     * Sends an Email with the token to the provided email address.
+     */
+    public void sendNewTokenEmail(String email, String resetUrl) throws MessagingException {
+        Message message = createResetPasswordEmail(email, resetUrl);
+        try (Transport smtpTransport = getEmailSession().getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL)) {
+            smtpTransport.connect(GMAIL_SMTP_SERVER, USERNAME, PASSWORD);
+            smtpTransport.sendMessage(message, message.getAllRecipients());
+            LOGGER.info("Message sent to email: {}", email);
+        }
+    }
 
     private Message createEmail(String email,String firstName, String password) throws MessagingException {
         Message message = new MimeMessage(getEmailSession());
@@ -42,6 +53,16 @@ public class EmailService {
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
         message.setSubject(EMAIL_SUBJECT);
         message.setText("The Lord be with you and good day "+firstName + "\n\nyour account password is: "+ password+"\n\n Infirmary Support team");
+        message.setSentDate(new Date());
+        message.saveChanges();
+        return message;
+    }
+    private Message createResetPasswordEmail(String email, String resetUrl) throws MessagingException {
+        Message message = new MimeMessage(getEmailSession());
+        message.setFrom(new InternetAddress(FROM_EMAIL));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+        message.setSubject(EMAIL_SUBJECT);
+        message.setText("The Lord be with you and good day " + "\n\nclick the link below to reset your password \n\n"+ resetUrl+"\n\n Infirmary Support team");
         message.setSentDate(new Date());
         message.saveChanges();
         return message;
