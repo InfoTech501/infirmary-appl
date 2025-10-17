@@ -32,7 +32,7 @@ public class Student implements Serializable {
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "guardian_id")
+    @JoinColumn(name = "stud_guardian_id", referencedColumnName = "guardian_id")
     private Guardian guardian;
 
     @OneToOne(cascade = CascadeType.ALL)
