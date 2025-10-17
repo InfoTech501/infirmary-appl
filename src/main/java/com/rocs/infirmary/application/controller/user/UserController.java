@@ -90,7 +90,7 @@ public class UserController {
      * @param user that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
      * */
-    @PostMapping("forget-password")
+    @PostMapping("/forget-password")
     public ResponseEntity<String> forgetPassword(@RequestBody User user) throws MessagingException {
         this.userService.forgetPassword(user);
         return new ResponseEntity<>("Email sent successfully",HttpStatus.OK);
