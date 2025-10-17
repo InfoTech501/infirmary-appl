@@ -189,7 +189,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }else{
             throw new UserNotFoundException("User not found");
         }
-
         return authenticatedUser;
     }
 
