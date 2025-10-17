@@ -4,8 +4,10 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
+import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
 import jakarta.mail.MessagingException;
+import org.springframework.security.core.Authentication;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,4 +48,10 @@ public interface UserService {
      * @param user is the object that contains the user credentials
      * */
     void forgetPassword(User user) throws MessagingException;
+    /**
+     * this is used to get the authenticated user
+     *
+     * @param authentication object representing the currently authenticated user
+     * */
+    AuthenticatedUser getAuthenticatedUserDetails(Authentication authentication);
 }

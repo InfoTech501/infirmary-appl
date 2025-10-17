@@ -4,8 +4,10 @@ import com.rocs.infirmary.application.domain.department.Department;
 import com.rocs.infirmary.application.domain.employee.Employee;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
+import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.user.User;
+import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
@@ -14,6 +16,7 @@ import com.rocs.infirmary.application.exception.domain.UsernameExistException;
 import com.rocs.infirmary.application.repository.department.DepartmentRepository;
 import com.rocs.infirmary.application.repository.employee.EmployeeRepository;
 import com.rocs.infirmary.application.repository.person.PersonRepository;
+import com.rocs.infirmary.application.repository.section.SectionRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.repository.user.UserRepository;
 import com.rocs.infirmary.application.service.email.EmailService;
@@ -29,6 +32,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,6 +47,9 @@ import java.util.concurrent.ExecutionException;
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
 import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
 
+/**
+ * this handles the service related to user details
+ * */
 @Service
 @Transactional
 @Qualifier(value = "userDetailsService")
@@ -53,6 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PersonRepository personRepository;
     private EmployeeRepository employeeRepository;
     private DepartmentRepository departmentRepository;
+    private SectionRepository sectionRepository;
     private EmailService emailService;
     private PasswordResetTokenService passwordResetTokenService;
 
@@ -72,7 +82,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            EmployeeRepository employeeRepository,
                            DepartmentRepository departmentRepository,
                            EmailService emailService,
-                           PasswordResetTokenService passwordResetTokenService) {
+                           PasswordResetTokenService passwordResetTokenService,
+                           SectionRepository sectionRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
@@ -80,6 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.personRepository = personRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.sectionRepository = sectionRepository;
         this.emailService = emailService;
         this.passwordResetTokenService = passwordResetTokenService;
     }
@@ -119,32 +131,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return registration;
     }
 
-    private User validateUsername(String currentUsername, String newUsername) throws UserNotFoundException,EmailExistException,UsernameExistException{
-       User userEmail = findUserByUsername(newUsername);
-
-       if(StringUtils.isNotBlank(currentUsername)){
-           User currentUser = findUserByUsername(currentUsername);
-           if(currentUser == null){
-               throw new UserNotFoundException("User not found");
-           }
-           if(userEmail != null && !userEmail.getId().equals(currentUser.getId())){
-               throw new EmailExistException("Email is already exist");
-           }
-           if(userEmail != null && userEmail.getId().equals(currentUser.getId())){
-               throw new UsernameExistException("Username is already Exist");
-           }
-           return currentUser;
-       }else{
-           if(userEmail != null){
-               throw new UsernameExistException("Username is already Exist");
-           }
-           if(userEmail != null){
-               throw new EmailExistException("Email is already exist");
-           }
-           return null;
-       }
-
-    }
 
     @Override
     public User resetPassword(String token,User user) throws InvalidTokenException{
@@ -154,6 +140,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         User newUser = this.userRepository.findUserByPersonEmail(validatedEmail);
         if(newUser == null){
+
             throw new UserNotFoundException("username does not exist");
         }
 
@@ -187,6 +174,52 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private String buildResetPasswordUrl(String token){
        return baseUrl+ resetEndpoint+ token;
+    }
+    @Override
+    public AuthenticatedUser getAuthenticatedUserDetails(Authentication authentication) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication instanceof AnonymousAuthenticationToken){
+            throw new UserNotFoundException("Unauthenticated user");
+        }
+        User user = findUserByUsername(authentication.getName());
+        AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+        if(user.getRole().equalsIgnoreCase("STUDENT_ROLE")) {
+            Student student = this.studentRepository.findStudentByUserId(user.getId());
+            authenticatedUser.setStudent(student);
+        }else if(user.getRole().equalsIgnoreCase("TEACHER_ROLE")){
+            Employee employee = this.employeeRepository.findEmployeeByUserId(user.getId());
+            authenticatedUser.setEmployee(employee);
+        }else{
+            throw new UserNotFoundException("User not found");
+        }
+        return authenticatedUser;
+    }
+
+    private User validateUsername(String currentUsername, String newUsername) throws UserNotFoundException,EmailExistException,UsernameExistException{
+        User userEmail = findUserByUsername(newUsername);
+
+        if(StringUtils.isNotBlank(currentUsername)){
+            User currentUser = findUserByUsername(currentUsername);
+            if(currentUser == null){
+                throw new UserNotFoundException("User not found");
+            }
+            if(userEmail != null && !userEmail.getId().equals(currentUser.getId())){
+                throw new EmailExistException("Email is already exist");
+            }
+            if(userEmail != null && userEmail.getId().equals(currentUser.getId())){
+                throw new UsernameExistException("Username is already Exist");
+            }
+            return currentUser;
+        }else{
+            if(userEmail != null){
+                throw new UsernameExistException("Username is already Exist");
+            }
+            if(userEmail != null){
+                throw new EmailExistException("Email is already exist");
+            }
+            return null;
+        }
+
     }
     private String generateUserId(){
        return RandomStringUtils.randomNumeric(10);
