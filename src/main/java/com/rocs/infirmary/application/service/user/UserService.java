@@ -48,5 +48,10 @@ public interface UserService {
      * @param user is the object that contains the user credentials
      * */
     void forgetPassword(User user) throws MessagingException;
+    /**
+     * this is used to get the authenticated user
+     *
+     * @param authentication object representing the currently authenticated user
+     * */
     AuthenticatedUser getAuthenticatedUserDetails(Authentication authentication);
 }

@@ -47,6 +47,9 @@ import java.util.concurrent.ExecutionException;
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
 import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
 
+/**
+ * this handles the service related to user details
+ * */
 @Service
 @Transactional
 @Qualifier(value = "userDetailsService")
