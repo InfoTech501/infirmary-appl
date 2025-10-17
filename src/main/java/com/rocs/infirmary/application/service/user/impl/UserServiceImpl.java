@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -54,6 +55,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private DepartmentRepository departmentRepository;
     private EmailService emailService;
     private PasswordResetTokenService passwordResetTokenService;
+
+    @Value("${spring.application.base-url}")
+    private String baseUrl;
+    @Value("${spring.application.endpoints.reset-password}")
+    private String resetEndpoint;
+
     /**
      * this creates a constructor for UserServiceImpl that is used to inject the required dependencies
      * */
@@ -173,11 +180,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new InvalidTokenException("To many request attempt");
         }
         String token = passwordResetTokenService.generateToken(userEmail);
-        String resetUrl = "http://localhost:8080/user/reset-password?token=" + token;
+        String resetUrl = buildResetPasswordUrl(token);
         this.passwordResetTokenService.addUserToEmailRequestAttemptCache(userEmail);
         this.emailService.sendNewTokenEmail(userEmail,resetUrl);
     }
 
+    private String buildResetPasswordUrl(String token){
+       return baseUrl+ resetEndpoint+ token;
+    }
     private String generateUserId(){
        return RandomStringUtils.randomNumeric(10);
     }
