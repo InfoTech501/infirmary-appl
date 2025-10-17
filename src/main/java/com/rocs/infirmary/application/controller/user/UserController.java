@@ -2,6 +2,7 @@ package com.rocs.infirmary.application.controller.user;
 
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
+import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
 import com.rocs.infirmary.application.service.user.UserService;
@@ -13,9 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
+
+import java.util.Map;
 
 import static com.rocs.infirmary.application.utils.security.constants.SecurityConstant.JWT_TOKEN_HEADER;
 
@@ -60,7 +65,7 @@ public class UserController {
         User loginUser = this.userService.findUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = provideJwtHeader(userPrincipal);
-        return new ResponseEntity<>("Login success",jwtHeader, HttpStatus.OK);
+        return new ResponseEntity<>("login success",jwtHeader, HttpStatus.OK);
     }
     /**
      * {@code register} used to handle the registration request, this accepts the object
@@ -95,7 +100,15 @@ public class UserController {
         this.userService.forgetPassword(user);
         return new ResponseEntity<>("Email sent successfully",HttpStatus.OK);
     }
-
+    /**
+     * {@code getCurrentUser} used to get the authenticated user
+     * @param authentication contains the authentication token
+     * @return ResponseEntity containing the user object, and  Http Status
+     * */
+    @GetMapping("/current-user")
+    public ResponseEntity<AuthenticatedUser> getCurrentUser(Authentication authentication) {
+        return new ResponseEntity<>(this.userService.getAuthenticatedUserDetails(authentication),HttpStatus.OK);
+    }
     private void authUserLogin(String username, String password){
         this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
     }
