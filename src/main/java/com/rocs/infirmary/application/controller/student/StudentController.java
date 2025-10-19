@@ -8,6 +8,8 @@ import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
+import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileResponse;
+import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,15 @@ import java.util.List;
 public class StudentController {
     private final StudentHealthInformationService studentService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
+
+    private final StudentHealthProfileService studentHealthProfileService;
+
     @Autowired
-    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService) {
+    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService) {
         this.studentService = studentService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
+        this.studentHealthProfileService = studentHealthProfileService;
+
     }
 
     @PutMapping("/health-profile/update")
@@ -52,5 +59,16 @@ public class StudentController {
     @GetMapping("/clinic/visit/view-all")
     public ResponseEntity<List<ClinicVisitHistory>> viewClinicVisitHistory(){
         return new ResponseEntity<>(this.clinicVisitHistoryService.findAllClinicVisits(), HttpStatus.OK);
+    }
+
+    /**
+     * used to facilitate the request for getting the student health profile of a student based on their lrn
+     *
+     * @return ResponseEntity containing the Student health profile, and http Status
+     * */
+    @GetMapping("/health-profile")
+    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) {
+        StudentHealthProfileResponse studentHealthProfile = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
+        return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
     }
 }
