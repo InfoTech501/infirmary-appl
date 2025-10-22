@@ -5,7 +5,10 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
+import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
+import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
+import com.rocs.infirmary.application.exception.domain.UsernameExistException;
 import jakarta.mail.MessagingException;
 import org.springframework.security.core.Authentication;
 
