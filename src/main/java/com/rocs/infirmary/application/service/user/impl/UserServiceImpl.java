@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         savedRegistration.setStudent(savedStudent);
         return savedRegistration;
     }
-    private Registration registerEmployee(Registration registration){
+    private Registration registerEmployee(Registration registration)throws DepartmentNotFoundException{
 
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername(),registration.getEmployee().getPerson().getEmail());
 

@@ -1,7 +1,7 @@
 package com.rocs.infirmary.application.service.student.health.profile.impl;
 
 import com.rocs.infirmary.application.domain.student.Student;
-import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileResponse;
+import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import com.rocs.infirmary.application.service.student.health.profile.exception.StudentHealthProfileNotFoundException;
