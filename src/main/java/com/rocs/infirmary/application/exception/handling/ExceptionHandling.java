@@ -73,7 +73,11 @@ public class ExceptionHandling implements ErrorController {
         return createHttpResponse(NOT_FOUND, exception.getMessage());
     }
     @ExceptionHandler(UsernameExistException.class)
-    public ResponseEntity<HttpResponse> usernameExistException(NoResultException exception){
+    public ResponseEntity<HttpResponse> usernameExistException(UsernameExistException exception){
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+    @ExceptionHandler(EmailExistException.class)
+    public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception){
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
@@ -92,6 +96,14 @@ public class ExceptionHandling implements ErrorController {
     }
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<HttpResponse>invalidTokenException(InvalidTokenException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<HttpResponse>departmentNotFoundException(DepartmentNotFoundException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<HttpResponse>invalidCredentialException(InvalidCredentialException e){
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
     /**

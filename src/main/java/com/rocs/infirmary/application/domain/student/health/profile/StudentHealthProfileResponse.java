@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.dto.student.health.profile;
+package com.rocs.infirmary.application.domain.student.health.profile;
 import com.rocs.infirmary.application.domain.student.Student;
 
 import lombok.Data;

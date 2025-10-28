@@ -8,7 +8,7 @@ import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
-import com.rocs.infirmary.application.dto.student.health.profile.StudentHealthProfileResponse;
+import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

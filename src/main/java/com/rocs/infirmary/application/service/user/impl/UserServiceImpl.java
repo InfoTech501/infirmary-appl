@@ -4,15 +4,11 @@ import com.rocs.infirmary.application.domain.department.Department;
 import com.rocs.infirmary.application.domain.employee.Employee;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
-import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
 import com.rocs.infirmary.application.domain.user.principal.UserPrincipal;
-import com.rocs.infirmary.application.exception.domain.EmailExistException;
-import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
-import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
-import com.rocs.infirmary.application.exception.domain.UsernameExistException;
+import com.rocs.infirmary.application.exception.domain.*;
 import com.rocs.infirmary.application.repository.department.DepartmentRepository;
 import com.rocs.infirmary.application.repository.employee.EmployeeRepository;
 import com.rocs.infirmary.application.repository.person.PersonRepository;
@@ -42,7 +38,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 import static com.rocs.infirmary.application.exception.constants.ExceptionConstants.USER_NOT_FOUND;
 import static com.rocs.infirmary.application.utils.security.enumeration.Role.*;
@@ -195,26 +190,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return authenticatedUser;
     }
 
-    private User validateUsername(String currentUsername, String newUsername) throws UserNotFoundException,EmailExistException,UsernameExistException{
-        User userEmail = findUserByUsername(newUsername);
-
+    private User validateUsernameAndEmail(String currentUsername, String newUsername, String email){
+        User userByUsername = findUserByUsername(newUsername);
+        User userByEmail = this.userRepository.findUserByPersonEmail(email);
         if(StringUtils.isNotBlank(currentUsername)){
             User currentUser = findUserByUsername(currentUsername);
             if(currentUser == null){
                 throw new UserNotFoundException("User not found");
             }
-            if(userEmail != null && !userEmail.getId().equals(currentUser.getId())){
+            if(userByEmail != null && !userByEmail.getId().equals(currentUser.getId())){
                 throw new EmailExistException("Email is already exist");
             }
-            if(userEmail != null && userEmail.getId().equals(currentUser.getId())){
+            if(userByUsername != null && userByUsername.getId().equals(currentUser.getId())){
                 throw new UsernameExistException("Username is already Exist");
             }
             return currentUser;
         }else{
-            if(userEmail != null){
+            if(userByUsername != null){
                 throw new UsernameExistException("Username is already Exist");
             }
-            if(userEmail != null){
+            if(userByEmail != null){
                 throw new EmailExistException("Email is already exist");
             }
             return null;
@@ -243,7 +238,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private Registration registerStudent(Registration registration){
-        validateUsername(StringUtils.EMPTY, registration.getStudent().getUser().getUsername());
+        validateUsernameAndEmail(StringUtils.EMPTY, registration.getStudent().getUser().getUsername(),registration.getStudent().getPerson().getEmail());
 
         String username = registration.getStudent().getUser().getUsername();
         String password = registration.getStudent().getUser().getPassword() == null
@@ -273,8 +268,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         savedRegistration.setStudent(savedStudent);
         return savedRegistration;
     }
-    private Registration registerEmployee(Registration registration){
-        validateUsername(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername());
+    private Registration registerEmployee(Registration registration)throws DepartmentNotFoundException{
+
+        validateUsernameAndEmail(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername(),registration.getEmployee().getPerson().getEmail());
 
         String username = registration.getEmployee().getUser().getUsername();
         String password = registration.getEmployee().getUser().getPassword() == null
@@ -303,7 +299,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Department department = departmentList.stream()
                 .filter(d -> d.getDepartmentName().equalsIgnoreCase(deptName))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Department not found: " + deptName));
+                .orElseThrow(() -> new DepartmentNotFoundException("Department not found for department name: " + deptName));
 
         employee.setDepartment(department);
         employee.setUser(newUser);
