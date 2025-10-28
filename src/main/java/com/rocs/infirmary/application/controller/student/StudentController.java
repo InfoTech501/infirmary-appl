@@ -71,4 +71,15 @@ public class StudentController {
         StudentHealthProfileResponse studentHealthProfile = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
         return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
     }
+    /**
+     * Submits a new student health profile.
+     *
+     * @param student the student object with health profile details
+     * @return the saved student with status {@code OK}
+     */
+    @PostMapping("/submit/health-profile")
+    public ResponseEntity<Student> createStudentHealthProfile(@RequestBody Student student) {
+        Student profile = studentHealthProfileService.addStudentHealthProfile(student);
+        return new ResponseEntity<>(profile,HttpStatus.OK);
+    }
 }
