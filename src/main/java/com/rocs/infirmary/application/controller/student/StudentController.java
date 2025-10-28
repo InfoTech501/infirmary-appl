@@ -4,8 +4,10 @@ package com.rocs.infirmary.application.controller.student;
 import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
+import com.rocs.infirmary.application.domain.student.list.AllStudentsList;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
+import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
 import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
@@ -26,13 +28,16 @@ public class StudentController {
     private final StudentHealthInformationService studentService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
 
+    private final StudentService viewAllStudentService;
+
     private final StudentHealthProfileService studentHealthProfileService;
 
     @Autowired
-    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService) {
+    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService viewAllStudentService) {
         this.studentService = studentService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
+        this.viewAllStudentService = viewAllStudentService;
 
     }
 
@@ -70,5 +75,11 @@ public class StudentController {
     public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) {
         StudentHealthProfileResponse studentHealthProfile = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
         return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/view-all-students")
+    public ResponseEntity<List<AllStudentsList>> viewAllStudents(){
+        return new ResponseEntity<>(this.viewAllStudentService.findAll(), HttpStatus.OK);
     }
 }
