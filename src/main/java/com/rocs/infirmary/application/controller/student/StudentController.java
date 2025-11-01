@@ -4,7 +4,7 @@ package com.rocs.infirmary.application.controller.student;
 import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
-import com.rocs.infirmary.application.domain.student.list.AllStudentsList;
+import com.rocs.infirmary.application.domain.student.list.StudentListView;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.StudentService;
@@ -78,8 +78,8 @@ public class StudentController {
     }
 
 
-    @GetMapping("/view-all-students")
-    public ResponseEntity<List<AllStudentsList>> viewAllStudents(){
+    @GetMapping("/view-all")
+    public ResponseEntity<List<StudentListView>> viewAllStudents(){
         return new ResponseEntity<>(this.viewAllStudentService.findAll(), HttpStatus.OK);
     }
 }
