@@ -6,7 +6,7 @@ import lombok.Data;
 //dto for studentslist w/ fix arrangement
 @Data
 @JsonPropertyOrder({ "lrn", "firstName", "lastName","age", "section", "gradeLevel", "guardianName" })
-public class StudentListView {
+public class StudentListResponse {
 
     private Long lrn;
     private String firstName;

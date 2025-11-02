@@ -4,7 +4,7 @@ package com.rocs.infirmary.application.controller.student;
 import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
-import com.rocs.infirmary.application.domain.student.list.StudentListView;
+import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.StudentService;
@@ -28,16 +28,16 @@ public class StudentController {
     private final StudentHealthInformationService studentService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
 
-    private final StudentService viewAllStudentService;
+    private final StudentService studentListService;
 
     private final StudentHealthProfileService studentHealthProfileService;
 
     @Autowired
-    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService viewAllStudentService) {
+    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentListService) {
         this.studentService = studentService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
-        this.viewAllStudentService = viewAllStudentService;
+        this.studentListService = studentListService;
 
     }
 
@@ -79,7 +79,7 @@ public class StudentController {
 
 
     @GetMapping("/view-all")
-    public ResponseEntity<List<StudentListView>> viewAllStudents(){
-        return new ResponseEntity<>(this.viewAllStudentService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<StudentListResponse>> viewAllStudents(){
+        return new ResponseEntity<>(this.studentListService.findAll(), HttpStatus.OK);
     }
 }

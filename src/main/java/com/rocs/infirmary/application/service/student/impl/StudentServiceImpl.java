@@ -3,7 +3,7 @@ package com.rocs.infirmary.application.service.student.impl;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
-import com.rocs.infirmary.application.domain.student.list.StudentListView;
+import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,11 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<StudentListView> findAll(){
+    public List<StudentListResponse> findAll(){
         return this.studentRepository.findAll().stream().map(this::populateViewAllStudentFields).toList();
     }
-    private StudentListView populateViewAllStudentFields(Student student){
-        StudentListView  allStudents = new StudentListView();
+    private StudentListResponse populateViewAllStudentFields(Student student){
+        StudentListResponse  allStudents = new StudentListResponse();
 
         allStudents.setLrn(student.getLrn());
 
