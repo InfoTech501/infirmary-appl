@@ -3,9 +3,8 @@ package com.rocs.infirmary.application.domain.student.list;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
-//dto for studentslist w/ fix arrangement
+//data transfer object for studentslist
 @Data
-@JsonPropertyOrder({ "lrn", "firstName", "lastName","age", "section", "gradeLevel", "guardianName" })
 public class StudentListResponse {
 
     private Long lrn;
