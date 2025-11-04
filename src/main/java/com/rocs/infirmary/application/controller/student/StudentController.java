@@ -77,7 +77,11 @@ public class StudentController {
         return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
     }
 
-
+    /**
+     * used to facilitate the request for getting a list of all students in
+     *
+     * @return ResponseEntity list for all Students, and http Status
+     * */
     @GetMapping("/view-all")
     public ResponseEntity<List<StudentListResponse>> viewAllStudents(){
         return new ResponseEntity<>(this.studentListService.findAll(), HttpStatus.OK);

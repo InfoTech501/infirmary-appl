@@ -3,7 +3,9 @@ package com.rocs.infirmary.application.domain.student.list;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
-//data transfer object for studentslist
+/**
+ * data transfer object for studentslist
+ * */
 @Data
 public class StudentListResponse {
 
