@@ -5,6 +5,8 @@ import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
 import java.util.List;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +32,27 @@ public class StudentServiceImpl implements StudentService {
 
         allStudents.setLrn(student.getLrn());
 
-        if (student.getPerson() != null) {
+        if (student.getPerson() != null &&
+                Stream.of(student.getPerson().getFirstName(), student.getPerson().getLastName(),
+                                student.getPerson().getAge())
+                                .anyMatch(studVal-> studVal  != null)) {
+
             allStudents.setFirstName(student.getPerson().getFirstName());
             allStudents.setLastName(student.getPerson().getLastName());
             allStudents.setAge(student.getPerson().getAge());
         }
 
-        if (student.getSection() != null) {
+        if (student.getSection() != null &&
+        Stream.of(student.getSection().getGradeLevel()).anyMatch(studVal -> studVal != null)) {
+
             allStudents.setSection(student.getSection().getSection());
             allStudents.setGradeLevel(student.getSection().getGradeLevel());
         }
 
-        if (student.getGuardian() != null) {
+
+        if (student.getGuardian() != null &&
+        Stream.of(student.getGuardian().getGuardianName()).anyMatch(studVal -> studVal != null)){
+
             allStudents.setGuardianName(student.getGuardian().getGuardianName());
         }
 
