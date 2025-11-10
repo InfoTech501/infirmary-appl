@@ -53,7 +53,7 @@ public class FrequentVisitReportServiceImpl implements FrequentVisitReportServic
 
         } catch (Exception e) {
             LOGGER.error("Error generating frequent visit report", e);
-            throw new FrequentVisitReportException("An error occurred while generating frequent visit report.", e);
+            throw new FrequentVisitReportException("An error occurred while generating frequent visit report: " + e.getMessage());
         }
     }
 
@@ -74,14 +74,14 @@ public class FrequentVisitReportServiceImpl implements FrequentVisitReportServic
             String fullName = "Student #" + studentId;
             if (student != null && student.getPerson() != null) {
                 List<String> nameParts = new ArrayList<>();
-                if (student.getPerson().getFirstname() != null && !student.getPerson().getFirstname().isBlank()) {
-                    nameParts.add(student.getPerson().getFirstname().trim());
+                if (student.getPerson().getFirstName() != null && !student.getPerson().getFirstName().isBlank()) {
+                    nameParts.add(student.getPerson().getFirstName().trim());
                 }
-                if (student.getPerson().getMiddlename() != null && !student.getPerson().getMiddlename().isBlank()) {
-                    nameParts.add(student.getPerson().getMiddlename().trim());
+                if (student.getPerson().getMiddleName() != null && !student.getPerson().getMiddleName().isBlank()) {
+                    nameParts.add(student.getPerson().getMiddleName().trim());
                 }
-                if (student.getPerson().getLastname() != null && !student.getPerson().getLastname().isBlank()) {
-                    nameParts.add(student.getPerson().getLastname().trim());
+                if (student.getPerson().getLastName() != null && !student.getPerson().getLastName().isBlank()) {
+                    nameParts.add(student.getPerson().getLastName().trim());
                 }
                 if (!nameParts.isEmpty()) {
                     fullName = String.join(" ", nameParts);
