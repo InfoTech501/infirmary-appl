@@ -1,6 +1,9 @@
 spring:
   application:
     name : infirmary-application
+    base-url : "http://localhost:8080"
+    endpoints:
+      reset-password: "/user/reset-password?token="
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl
     username: infirmary
@@ -17,3 +20,4 @@ spring:
       name: build/log/${spring.application.name}.log
 jwt:
   secret: 'thebigbrownfoxjumpsoverthelazydog'
+

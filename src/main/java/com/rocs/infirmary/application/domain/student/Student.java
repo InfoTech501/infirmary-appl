@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.user.User;
+import com.rocs.infirmary.application.domain.guardian.Guardian;
+import com.rocs.infirmary.application.domain.medical.history.MedicalHistory;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,4 +30,13 @@ public class Student implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stud_guardian_id", referencedColumnName = "guardian_id")
+    private Guardian guardian;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "med_history_id")
+    private MedicalHistory medicalHistory;
+
 }

@@ -1,4 +1,4 @@
-package com.rocs.infirmary.application.service.medication.trend.impl;
+package com.rocs.infirmary.application.service.dashboard.medication.trend.report.impl;
 
 import com.rocs.infirmary.application.domain.medicine.Medicine;
 import com.rocs.infirmary.application.domain.medicine.administered.MedicineAdministered;
@@ -6,20 +6,20 @@ import com.rocs.infirmary.application.domain.medicine.trend.report.MedicineTrend
 import com.rocs.infirmary.application.exception.domain.MedicineNotFoundException;
 import com.rocs.infirmary.application.repository.medicine.MedicineRepository;
 import com.rocs.infirmary.application.repository.medicine.administered.MedicineAdministeredRepository;
-import com.rocs.infirmary.application.service.medication.trend.MedicationTrendReportService;
+import com.rocs.infirmary.application.service.dashboard.medication.trend.report.MedicationTrendReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MedicationTrendReportServiceImpl implements MedicationTrendReportService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MedicationTrendReportServiceImpl.class);
     private final MedicineAdministeredRepository medicineAdministeredRepository;
     private final MedicineRepository medicineRepository;
 
@@ -48,6 +48,11 @@ public class MedicationTrendReportServiceImpl implements MedicationTrendReportSe
         List<MedicineAdministered> medicineAdministeredList = findMedicineAdministeredBetween(startDate, endDate);
         List<MedicineTrendReport> reports = new ArrayList<>();
 
+        if(Stream.of(medicineAdministeredList).anyMatch(list -> list == null || list.isEmpty())){
+            LOGGER.error("No Administered medicine found in the database");
+            throw new MedicineNotFoundException("No Administered medicine found in the database");
+        }
+
         Map<Long, List<MedicineAdministered>> medicineIds = medicineAdministeredList.stream().collect(Collectors.groupingBy(MedicineAdministered::getMedicineId));
 
         for(Map.Entry<Long, List<MedicineAdministered>> entries : medicineIds.entrySet()){
@@ -61,7 +66,6 @@ public class MedicationTrendReportServiceImpl implements MedicationTrendReportSe
 
             medicineTrendReport.setStartDate(startDate);
             medicineTrendReport.setEndDate(endDate);
-            medicineAdministeredRank(reports);
 
             String itemName = findMedicineById(medicineId).getItemName();
             medicineTrendReport.setMedicineName(itemName);
@@ -70,25 +74,21 @@ public class MedicationTrendReportServiceImpl implements MedicationTrendReportSe
             medicineTrendReport.setDateAdministered(dateAdministered);
             reports.add(medicineTrendReport);
         }
+        medicineAdministeredRank(reports);
         return reports;
     }
 
     private void medicineAdministeredRank(List<MedicineTrendReport> medicineAdministeredList){
         medicineAdministeredList.sort(Comparator.comparingInt(MedicineTrendReport::getDistributedMedicine).reversed());
-        int rank = 1;
-        int sameRankCount = 0;
-        int previousCount = -1;
+        int rank = 0;
+        int previousCount = 0;
 
         for(MedicineTrendReport medicineTrendReport : medicineAdministeredList){
-            if(medicineTrendReport.getDistributedMedicine() == previousCount){
-                medicineTrendReport.setRank(rank);
-                sameRankCount++;
-            }else{
-                rank += sameRankCount;
-                medicineTrendReport.setRank(rank);
+            if(medicineTrendReport.getDistributedMedicine() != previousCount){
+                rank++;
                 previousCount = medicineTrendReport.getDistributedMedicine();
-                sameRankCount = 1;
             }
+            medicineTrendReport.setRank(rank);
         }
     }
 }
