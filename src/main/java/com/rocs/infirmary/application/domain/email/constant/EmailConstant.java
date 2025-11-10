@@ -14,17 +14,17 @@ public class EmailConstant {
     /**
      * Email address used as the sender's address.
      */
-    public static final String USERNAME = "rogationist.computing.society@gmail.com";
+    public static final String USERNAME = "rogationist.computer.society.rocs@gmail.com";
 
     /**
      * Password used for authenticating the sender's email account.
      */
-    public static final String PASSWORD = "mpeo apom ojqd nqwr";
+    public static final String PASSWORD = "stjj nitz wfnw pqmn";
 
     /**
      * This is the email address that will appear as the "From" address in sent emails.
      */
-    public static final String FROM_EMAIL = "rogationist.computing.society@gmail.com";
+    public static final String FROM_EMAIL = "rogationist.computer.society.rocs@gmail.com";
 
     /**
      * This constant will be used as the subject of the email welcoming users.
