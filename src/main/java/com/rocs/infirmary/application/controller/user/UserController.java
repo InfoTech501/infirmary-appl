@@ -135,10 +135,23 @@ public class UserController {
             String studentUsername = registration.getStudent().getUser().getUsername();
             String studentPassword = registration.getStudent().getUser().getPassword();
             String gender = registration.getStudent().getPerson().getGender();
+            Date birthdate = registration.getStudent().getPerson().getBirthdate();
             if(lrn == null || Stream.of(studentEmail,studentFirstName,studentMiddleName,studentLastName,studentUsername,studentPassword,gender)
                     .anyMatch(input -> input == null || input.isBlank())){
              throw new InvalidCredentialException("Please provide all required fields");
             }
+            if (!studentFirstName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid FirstName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
+            if (!studentMiddleName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid MiddleName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
+            if (!studentLastName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid LastName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
+//            if(!isValidBirthDate(birthdate)){
+//                throw new InvalidCredentialException("invalid birthdate format");
+//            }
             if(!isValidEmail(studentEmail)){
                 throw new InvalidCredentialException("invalid email address format");
             }
@@ -156,9 +169,22 @@ public class UserController {
             if(employeeNumber <= 0 || Stream.of(employeeEmail,employeeFirstName,employeeMiddleName,employeeLastName,employeeUsername,employeePassword,employmentStatus,dateEmployeed.toString()).anyMatch(String::isBlank) ){
                 throw new InvalidCredentialException("Please provide all required field");
             }
+
+            if (!employeeFirstName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid FirstName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
+            if (!employeeMiddleName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid MiddleName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
+            if (!employeeLastName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
+                throw new InvalidCredentialException("Invalid LastName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            }
             if(!isValidEmail(employeeEmail)){
                 throw new InvalidCredentialException("invalid email address format");
             }
+//            if(!isValidEmploymentDate(dateEmployeed)){
+//                throw new InvalidCredentialException("invalid dateEmployeed format");
+//            }
         }
         return true;
     }
@@ -167,4 +193,12 @@ public class UserController {
         Matcher emailmatcher = pattern.matcher(email);
         return emailmatcher.find();
     }
+
+//    private boolean isValidBirthDate(Date birthdate){
+//
+//    }
+//
+//    private boolean isValidEmploymentDate(Date dateEmployed){
+//
+//    }
 }
