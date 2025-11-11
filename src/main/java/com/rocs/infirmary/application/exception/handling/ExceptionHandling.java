@@ -80,6 +80,11 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception){
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
+    
+    @ExceptionHandler(FrequentVisitReportException.class)
+    public ResponseEntity<HttpResponse> frequentVisitReportException(FrequentVisitReportException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
 
     @ExceptionHandler(MedicineNotFoundException.class)
     public ResponseEntity<HttpResponse> medicineNotFound(MedicineNotFoundException exception){
