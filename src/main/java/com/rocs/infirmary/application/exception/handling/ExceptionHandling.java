@@ -125,4 +125,9 @@ public class ExceptionHandling implements ErrorController {
         return new ResponseEntity<>(new HttpResponse(status.value(), status,
                 status.getReasonPhrase().toUpperCase(), message.toUpperCase()), status);
     }
+
+    @ExceptionHandler(InvalidLRNexception.class)
+    public ResponseEntity<HttpResponse> InvalidLRNexception(InvalidLRNexception exception){
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
 }
