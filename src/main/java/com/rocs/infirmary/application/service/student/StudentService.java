@@ -11,5 +11,5 @@ import java.util.List;
  * */
 
 public interface StudentService {
-    List<StudentListResponse> findAll();
+    List<StudentListResponse> findAllStudents();
 }
