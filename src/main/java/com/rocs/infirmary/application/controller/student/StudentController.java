@@ -45,10 +45,19 @@ public class StudentController {
         this.studentHealthProfileService = studentHealthProfileService;
         this.qrCodeProviderService = qrCodeProviderService;
     }
+    /**
+     * This converter allows Spring to automatically serialize {@code BufferedImage} responses to HTTP responses in image format.
+     * @return a {@link BufferedImageHttpMessageConverter} for handling image responses
+     */
     @Bean
     public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
         return new BufferedImageHttpMessageConverter();
     }
+    /**
+     * this is used to facilitate request for updating student health profile
+     *
+     * @return ResponseEntity containing the Student clinic visit history, and the Http Status
+     * */
     @PutMapping("/health-profile/update")
     public ResponseEntity<Student> updateStudent(@RequestBody StudentHealthInformation student) throws StudentNotFoundException, SectionNotFoundException {
         return new ResponseEntity<>(this.studentService.updateStudentHealthInformation(student),HttpStatus.OK);
