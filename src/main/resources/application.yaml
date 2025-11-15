@@ -4,6 +4,7 @@ spring:
     base-url : "http://localhost:8080"
     endpoints:
       reset-password: "/user/reset-password?token="
+      parent-endpoint: "/parent/view/student-profile?token="
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl
     username: infirmary
