@@ -35,6 +35,13 @@ public class QrCodeProviderServiceImpl implements QrCodeProviderService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    /**
+     * This creates a constructor for {@codde QrCodeProviderServiceImpl}
+     *
+     * @param userRepository represents the user repository
+     * @param studentRepository represents the student repository
+     * @param jwtTokenProvider the service used to provide jwt token
+     * */
     @Autowired
     public QrCodeProviderServiceImpl(UserRepository userRepository, StudentRepository studentRepository, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
