@@ -19,6 +19,11 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
+    /**
+     * creates a constructor for {@code StudentServiceImpl}
+     *
+     * @param studentRepository represents the student repository
+     * */
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
