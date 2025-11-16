@@ -4,7 +4,8 @@ import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
-import com.rocs.infirmary.application.service.student.health.profile.exception.StudentHealthProfileNotFoundException;
+import com.rocs.infirmary.application.exception.domain.StudentHealthProfileNotFoundException;
+import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -31,9 +32,9 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
     }
 
     @Override
-    public StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn) {
+    public StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn) throws StudentHealthProfileNotFoundException, InvalidCredentialException {
 
-
+        checkLrn(lrn);
         Student student = studentRepository.findStudentByLrn(lrn);
 
         if (student==null) {
@@ -41,11 +42,22 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
             throw new StudentHealthProfileNotFoundException("Student Health profile not found");
         }
 
+
         StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
 
         studentHealthProfile.setStudent(student);
 
         return studentHealthProfile;
+    }
+
+    private void checkLrn(Long lrn) {
+        if (lrn == null) {
+            throw new InvalidCredentialException("LRN must not be null");
+        }
+        int length = String.valueOf(lrn).length();
+        if (length != 12) {
+            throw new InvalidCredentialException("LRN must be 12 digits");
+        }
     }
 }
 
