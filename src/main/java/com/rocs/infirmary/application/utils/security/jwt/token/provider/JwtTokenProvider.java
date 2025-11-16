@@ -43,6 +43,18 @@ public class JwtTokenProvider {
                 .sign(Algorithm.HMAC512(secret.getBytes()));
     }
     /**
+     * Generates JWT Token for Parent access
+     * The token will contain the student's LRN as the subject
+     * @param lrn of the student for whom the parent token is being generated
+     * @return the jwt token
+     * */
+    public String generateParentJwtToken(Long lrn){
+        return JWT.create().withIssuer(ROCS).withAudience(PARENT_ACCESS)
+                .withIssuedAt(new Date()).withSubject(lrn.toString())
+                .withExpiresAt(new Date(System.currentTimeMillis()+PARENT_TOKEN_EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(secret.getBytes()));
+    }
+    /**
      * Get authorities from the token.
      * @param token the jwt token
      * @return the list of authorities from the token
