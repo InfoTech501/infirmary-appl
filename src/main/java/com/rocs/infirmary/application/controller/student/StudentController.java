@@ -33,18 +33,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentHealthInformationService studentService;
+    private final StudentHealthInformationService studentHealthInformationService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
-    private final StudentService studentListService;
+    private final StudentService studentService;
     private final StudentHealthProfileService studentHealthProfileService;
     private final QrCodeProviderService qrCodeProviderService;
 
     @Autowired
-    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentListService, QrCodeProviderService qrCodeProviderService) {
-        this.studentService = studentService;
+    public StudentController(StudentHealthInformationService studentHealthInformationService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentService, QrCodeProviderService qrCodeProviderService) {
+        this.studentHealthInformationService = studentHealthInformationService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
-        this.studentListService = studentListService;
+        this.studentService = studentService;
         this.qrCodeProviderService = qrCodeProviderService;
     }
 
@@ -64,7 +64,7 @@ public class StudentController {
      * */
     @PutMapping("/health-profile/update")
     public ResponseEntity<Student> updateStudent(@RequestBody StudentHealthInformation student) throws StudentNotFoundException, SectionNotFoundException {
-        return new ResponseEntity<>(this.studentService.updateStudentHealthInformation(student),HttpStatus.OK);
+        return new ResponseEntity<>(this.studentHealthInformationService.updateStudentHealthInformation(student),HttpStatus.OK);
     }
 
     /**
@@ -105,7 +105,7 @@ public class StudentController {
      * */
     @GetMapping("/view-all")
     public ResponseEntity<List<StudentListResponse>> viewAllStudents(){
-        return new ResponseEntity<>(this.studentListService.findAllStudents(), HttpStatus.OK);
+        return new ResponseEntity<>(this.studentService.findAllStudents(), HttpStatus.OK);
     }
       
     /**
