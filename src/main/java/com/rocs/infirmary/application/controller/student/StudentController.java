@@ -8,15 +8,23 @@ import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.StudentService;
+import com.rocs.infirmary.application.service.qr.code.QrCodeProviderService;
+
 import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
 import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -27,20 +35,33 @@ import java.util.List;
 public class StudentController {
     private final StudentHealthInformationService studentService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
-
     private final StudentService studentListService;
-
     private final StudentHealthProfileService studentHealthProfileService;
+    private final QrCodeProviderService qrCodeProviderService;
 
     @Autowired
-    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentListService) {
+    public StudentController(StudentHealthInformationService studentService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentListService, QrCodeProviderService qrCodeProviderService) {
         this.studentService = studentService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
         this.studentListService = studentListService;
-
+        this.qrCodeProviderService = qrCodeProviderService;
     }
 
+  
+    /**
+     * This converter allows Spring to automatically serialize {@code BufferedImage} responses to HTTP responses in image format.
+     * @return a {@link BufferedImageHttpMessageConverter} for handling image responses
+     */
+    @Bean
+    public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
+        return new BufferedImageHttpMessageConverter();
+    }
+    /**
+     * this is used to facilitate request for updating student health profile
+     *
+     * @return ResponseEntity containing the Student clinic visit history, and the Http Status
+     * */
     @PutMapping("/health-profile/update")
     public ResponseEntity<Student> updateStudent(@RequestBody StudentHealthInformation student) throws StudentNotFoundException, SectionNotFoundException {
         return new ResponseEntity<>(this.studentService.updateStudentHealthInformation(student),HttpStatus.OK);
@@ -86,4 +107,15 @@ public class StudentController {
     public ResponseEntity<List<StudentListResponse>> viewAllStudents(){
         return new ResponseEntity<>(this.studentListService.findAllStudents(), HttpStatus.OK);
     }
+      
+    /**
+     * used to facilitate the request for generating the parent qr code for view student health profile
+     *
+     * @return ResponseEntity containing the generated qr code, and http Status
+     * */
+    @GetMapping(value = "/generate-qr",produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<BufferedImage> generateQrCode(Authentication authentication) throws StudentNotFoundException {
+        return new ResponseEntity<>(qrCodeProviderService.generateQrCode(authentication),HttpStatus.OK);
+    }
+    
 }

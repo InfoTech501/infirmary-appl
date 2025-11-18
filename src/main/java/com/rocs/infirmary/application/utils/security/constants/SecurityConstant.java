@@ -8,6 +8,10 @@ public class SecurityConstant {
      */
     public static final long EXPIRATION_TIME = 432000000;
     /**
+     * parent token expiration time in milliseconds
+     */
+    public static final long PARENT_TOKEN_EXPIRATION_TIME = 86400000;
+    /**
      * token prefix bearer in Http headers
      * */
     public static final String TOKEN_PREFIX = "Bearer ";
@@ -27,6 +31,10 @@ public class SecurityConstant {
      * application description
      * */
     public static final String ROCS_ADMINISTRATION = "Infirmary Application self Service";
+    /**
+     * description for parent access
+     * */
+    public static final String PARENT_ACCESS = "Parent public access";
     /**
      * key for storing authorities in JWT claims
      * */
