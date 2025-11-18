@@ -140,14 +140,10 @@ public class UserController {
                     .anyMatch(input -> input == null || input.isBlank())){
              throw new InvalidCredentialException("Please provide all required fields");
             }
-            if (!studentFirstName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid FirstName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
-            }
-            if (!studentMiddleName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid MiddleName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
-            }
-            if (!studentLastName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid LastName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+            if (Stream.of(studentFirstName, studentMiddleName, studentLastName)
+                    .anyMatch(name -> !isValidName(name))) {
+                throw new InvalidCredentialException(
+                        "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
 //            if(!isValidBirthDate(birthdate)){
 //                throw new InvalidCredentialException("invalid birthdate format");
@@ -170,14 +166,11 @@ public class UserController {
                 throw new InvalidCredentialException("Please provide all required field");
             }
 
-            if (!employeeFirstName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid FirstName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
-            }
-            if (!employeeMiddleName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid MiddleName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
-            }
-            if (!employeeLastName.matches("^[A-Za-z]+( [A-Za-z]+)*$")){
-                throw new InvalidCredentialException("Invalid LastName Credentials, please remove any numbers, symbols, special characters, or double spaces.");
+
+            if (Stream.of(employeeFirstName, employeeMiddleName, employeeLastName)
+                    .anyMatch(name -> !isValidName(name))) {
+                throw new InvalidCredentialException(
+                        "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
             if(!isValidEmail(employeeEmail)){
                 throw new InvalidCredentialException("invalid email address format");
@@ -192,6 +185,10 @@ public class UserController {
         Pattern pattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
         Matcher emailmatcher = pattern.matcher(email);
         return emailmatcher.find();
+    }
+
+    private boolean isValidName(String name) {
+        return name != null && name.matches("^[A-Za-z]+( [A-Za-z]+)*$");
     }
 
 //    private boolean isValidBirthDate(Date birthdate){
