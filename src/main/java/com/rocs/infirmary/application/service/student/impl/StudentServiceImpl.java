@@ -3,7 +3,7 @@ package com.rocs.infirmary.application.service.student.impl;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
-import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
+import com.rocs.infirmary.application.domain.student.list.StudentResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,12 +28,12 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<StudentListResponse> findAllStudents() {
+    public List<StudentResponse> findAllStudents() {
 
         List<Student> students = this.studentRepository.findAll();
 
         return (students.stream().map(student -> {
-            StudentListResponse allStudents = new StudentListResponse();
+            StudentResponse allStudents = new StudentResponse();
 
             allStudents.setLrn(student.getLrn());
 

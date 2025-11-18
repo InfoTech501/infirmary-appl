@@ -1,8 +1,6 @@
 package com.rocs.infirmary.application.service.student;
 
-
-
-import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
+import com.rocs.infirmary.application.domain.student.list.StudentResponse;
 
 import java.util.List;
 
@@ -11,5 +9,5 @@ import java.util.List;
  * */
 
 public interface StudentService {
-    List<StudentListResponse> findAllStudents();
+    List<StudentResponse> findAllStudents();
 }
