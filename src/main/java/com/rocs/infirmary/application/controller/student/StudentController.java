@@ -84,6 +84,6 @@ public class StudentController {
      * */
     @GetMapping("/view-all")
     public ResponseEntity<List<StudentListResponse>> viewAllStudents(){
-        return new ResponseEntity<>(this.studentListService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.studentListService.findAllStudents(), HttpStatus.OK);
     }
 }

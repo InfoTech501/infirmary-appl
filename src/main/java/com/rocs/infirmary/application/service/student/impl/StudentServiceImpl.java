@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.domain.student.list.StudentListResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,53 +21,55 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Autowired
-    public StudentServiceImpl( StudentRepository studentRepository) {
+    public StudentServiceImpl(StudentRepository studentRepository) {
 
         this.studentRepository = studentRepository;
     }
 
 
     @Override
-    public List<StudentListResponse> findAll(){
-        return this.studentRepository.findAll().stream().map(this::populateViewAllStudentFields).toList();
+    public List<StudentListResponse> findAllStudents() {
+
+        List<Student> students = this.studentRepository.findAll();
+
+        return (students.stream().map(student -> {
+            StudentListResponse allStudents = new StudentListResponse();
+
+            allStudents.setLrn(student.getLrn());
+
+            if (student.getPerson() != null &&
+                    Stream.of(student.getPerson().getFirstName(), student.getPerson().getLastName(),
+                                    student.getPerson().getAge())
+                            .anyMatch(studVal -> studVal != null)) {
+
+                allStudents.setFirstName(student.getPerson().getFirstName());
+                allStudents.setLastName(student.getPerson().getLastName());
+                allStudents.setAge(student.getPerson().getAge());
+            }
+
+            if (student.getSection() != null &&
+                    Stream.of(student.getSection().getGradeLevel()).anyMatch(studVal -> studVal != null)) {
+
+                allStudents.setSection(student.getSection().getSection());
+                allStudents.setGradeLevel(student.getSection().getGradeLevel());
+            }
+
+            if (student.getGuardian() != null &&
+                    Stream.of(student.getGuardian().getGuardianName()).anyMatch(studVal -> studVal != null)) {
+
+                allStudents.setGuardianName(student.getGuardian().getGuardianName());
+            }
+            return allStudents;
+        }).collect(Collectors.toList()));
     }
-    private StudentListResponse populateViewAllStudentFields(Student student){
-        StudentListResponse  allStudents = new StudentListResponse();
-
-        allStudents.setLrn(student.getLrn());
-
-        if (student.getPerson() != null &&
-                Stream.of(student.getPerson().getFirstName(), student.getPerson().getLastName(),
-                                student.getPerson().getAge())
-                                .anyMatch(studVal-> studVal  != null)) {
-
-            allStudents.setFirstName(student.getPerson().getFirstName());
-            allStudents.setLastName(student.getPerson().getLastName());
-            allStudents.setAge(student.getPerson().getAge());
-        }
-
-        if (student.getSection() != null &&
-        Stream.of(student.getSection().getGradeLevel()).anyMatch(studVal -> studVal != null)) {
-
-            allStudents.setSection(student.getSection().getSection());
-            allStudents.setGradeLevel(student.getSection().getGradeLevel());
-        }
-
-
-        if (student.getGuardian() != null &&
-        Stream.of(student.getGuardian().getGuardianName()).anyMatch(studVal -> studVal != null)){
-
-            allStudents.setGuardianName(student.getGuardian().getGuardianName());
-        }
-
-        return allStudents;
-    }
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
