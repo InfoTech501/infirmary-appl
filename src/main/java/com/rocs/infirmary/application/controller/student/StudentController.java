@@ -102,4 +102,15 @@ public class StudentController {
     public ResponseEntity<BufferedImage> generateQrCode(Authentication authentication) throws StudentNotFoundException {
         return new ResponseEntity<>(qrCodeProviderService.generateQrCode(authentication),HttpStatus.OK);
     }
+    /**
+     * Submits a new student health profile.
+     *
+     * @param student the student object with health profile details
+     * @return the saved student with status {@code OK}
+     */
+    @PostMapping("/submit/health-profile")
+    public ResponseEntity<Student> createStudentHealthProfile(@RequestBody Student student) {
+        Student profile = studentHealthProfileService.addStudentHealthProfile(student);
+        return new ResponseEntity<>(profile,HttpStatus.OK);
+    }
 }
