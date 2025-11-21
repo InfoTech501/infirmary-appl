@@ -53,5 +53,11 @@ public interface UserService {
      * @param authentication object representing the currently authenticated user
      * */
     AuthenticatedUser getAuthenticatedUserDetails(Authentication authentication);
+    /**
+     * this is used to get the subject from parent token
+     *
+     * @param token is the jwt token for the parent
+     * @return the subject extracted from the token
+     * */
     String getSubjectFromParentToken(String token);
 }
