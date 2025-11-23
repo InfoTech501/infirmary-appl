@@ -19,6 +19,7 @@ import com.rocs.infirmary.application.service.email.EmailService;
 import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.password.reset.token.PasswordResetTokenService;
 import com.rocs.infirmary.application.service.user.UserService;
+import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private SectionRepository sectionRepository;
     private EmailService emailService;
     private PasswordResetTokenService passwordResetTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${spring.application.base-url}")
     private String baseUrl;
@@ -78,7 +80,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            DepartmentRepository departmentRepository,
                            EmailService emailService,
                            PasswordResetTokenService passwordResetTokenService,
-                           SectionRepository sectionRepository) {
+                           SectionRepository sectionRepository,
+                           JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
@@ -89,7 +92,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.sectionRepository = sectionRepository;
         this.emailService = emailService;
         this.passwordResetTokenService = passwordResetTokenService;
-    }
+       this.jwtTokenProvider = jwtTokenProvider;
+   }
 
     @Override
     public User findUserByUsername(String username) {
@@ -188,6 +192,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UserNotFoundException("User not found");
         }
         return authenticatedUser;
+    }
+
+    @Override
+    public String getSubjectFromParentToken(String token) {
+       String subjectFromParentToken = this.jwtTokenProvider.getSubject(token);
+       return subjectFromParentToken;
     }
 
     private User validateUsernameAndEmail(String currentUsername, String newUsername, String email){
