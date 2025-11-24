@@ -58,6 +58,12 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         if (length != 12) {
             throw new InvalidCredentialException("LRN must be 12 digits");
         }
+
+        String lrnString = String.valueOf(lrn);
+        if (!lrnString.matches("\\d+")){
+            throw new InvalidCredentialException("LRN must contain only number");
+        }
+
     }
 }
 
