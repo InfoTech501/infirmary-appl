@@ -9,5 +9,9 @@ import java.util.List;
  * */
 
 public interface StudentService {
+
+    /**
+     * this finds all students
+     * */
     List<StudentResponse> findAllStudents();
 }
