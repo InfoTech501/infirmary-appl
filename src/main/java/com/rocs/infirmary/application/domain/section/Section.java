@@ -16,5 +16,4 @@ public class Section {
     @Column(name = "grade_level")
     private String gradeLevel;
     private String section;
-
 }
