@@ -1,10 +1,12 @@
 package com.rocs.infirmary.application.service.student.health.information.impl;
 
+import com.rocs.infirmary.application.domain.guardian.Guardian;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
+import com.rocs.infirmary.application.repository.guardian.GuardianRepository;
 import com.rocs.infirmary.application.repository.section.SectionRepository;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
@@ -20,6 +22,7 @@ public class StudentHealthInformationServiceImpl implements StudentHealthInforma
     private static Logger LOGGER = LoggerFactory.getLogger(StudentHealthInformationServiceImpl.class);
     private final StudentRepository studentRepository;
     private final SectionRepository sectionRepository;
+    private final GuardianRepository guardianRepository;
     /**
      * this creates a constructor for {@code StudentHealthInformationServiceImpl}
      *
@@ -27,9 +30,10 @@ public class StudentHealthInformationServiceImpl implements StudentHealthInforma
      * @param sectionRepository represents the section repository
      * */
     @Autowired
-    public StudentHealthInformationServiceImpl(StudentRepository studentRepository, SectionRepository sectionRepository) {
+    public StudentHealthInformationServiceImpl(StudentRepository studentRepository, SectionRepository sectionRepository, GuardianRepository guardianRepository) {
         this.studentRepository = studentRepository;
         this.sectionRepository = sectionRepository;
+        this.guardianRepository = guardianRepository;
     }
 
     @Override
@@ -59,6 +63,9 @@ public class StudentHealthInformationServiceImpl implements StudentHealthInforma
         if(student.getUser() != null){
             throw new StudentNotFoundException("Cannot Update User Details here");
         }
+        if(student.getGuardian() != null){
+            existingStudent.setGuardian(updateGuardian(student,existingStudent.getGuardian()));
+        }
         return this.studentRepository.save(existingStudent);
     }
     private Section updateSection (Student student,Section existingSection){
@@ -67,5 +74,12 @@ public class StudentHealthInformationServiceImpl implements StudentHealthInforma
         if(student.getSection().getGradeLevel() != null) section.setGradeLevel(student.getSection().getGradeLevel());
         if(student.getSection().getSection() != null) section.setSection(student.getSection().getSection());
         return this.sectionRepository.save(section);
+    }
+    private Guardian updateGuardian(Student student, Guardian existingGuardian){
+        Guardian guardian = existingGuardian;
+        if(student.getGuardian().getGuardianName() != null) guardian.setGuardianName(student.getGuardian().getGuardianName());
+        if(student.getGuardian().getGuardianNumber() != null) guardian.setGuardianNumber(student.getGuardian().getGuardianNumber());
+        if(student.getGuardian().getGuardianAddress() != null) guardian.setGuardianAddress(student.getGuardian().getGuardianAddress());
+        return this.guardianRepository.save(guardian);
     }
 }
