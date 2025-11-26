@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -145,9 +146,9 @@ public class UserController {
                 throw new InvalidCredentialException(
                         "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
-//            if(!isValidBirthDate(birthdate)){
-//                throw new InvalidCredentialException("invalid birthdate format");
-//            }
+            if(!isValidDate(birthdate)){
+                throw new InvalidDateException("invalid date");
+            }
             if(!isValidEmail(studentEmail)){
                 throw new InvalidCredentialException("invalid email address format");
             }
@@ -191,11 +192,19 @@ public class UserController {
         return name != null && name.matches("^[A-Za-z]+( [A-Za-z]+)*$");
     }
 
-//    private boolean isValidBirthDate(Date birthdate){
-//
-//    }
-//
-//    private boolean isValidEmploymentDate(Date dateEmployed){
-//
-//    }
+    private boolean isValidDate(Date date) {
+//        if (date == null) return false;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+
+        try {
+            String dateString = dateFormat.format(date);
+            dateFormat.parse(dateString);
+            return true;
+        } catch (Exception e ) {
+            return false;
+        }
+    }
+
+
 }
