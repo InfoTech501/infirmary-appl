@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.section.Section;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
+import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.repository.guardian.GuardianRepository;
 import com.rocs.infirmary.application.repository.section.SectionRepository;
@@ -77,6 +78,9 @@ public class StudentHealthInformationServiceImpl implements StudentHealthInforma
     }
     private Guardian updateGuardian(Student student, Guardian existingGuardian){
         Guardian guardian = existingGuardian;
+        if(guardian == null){
+            throw new InvalidCredentialException("Guardian information for this student is missing.");
+        }
         if(student.getGuardian().getGuardianName() != null) guardian.setGuardianName(student.getGuardian().getGuardianName());
         if(student.getGuardian().getGuardianNumber() != null) guardian.setGuardianNumber(student.getGuardian().getGuardianNumber());
         if(student.getGuardian().getGuardianAddress() != null) guardian.setGuardianAddress(student.getGuardian().getGuardianAddress());
