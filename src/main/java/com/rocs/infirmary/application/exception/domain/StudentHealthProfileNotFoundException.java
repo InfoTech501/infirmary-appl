@@ -2,7 +2,7 @@ package com.rocs.infirmary.application.exception.domain;
 /**
  * This exception is thrown when a student's health profile is not found.
  */
-public class StudentHealthProfileNotFoundException extends Exception{
+public class StudentHealthProfileNotFoundException extends RuntimeException{
 
     /**
      * Creates a new StudentHealthProfileNotFoundException with a specified message.
