@@ -2,15 +2,12 @@ package com.rocs.infirmary.application.service.student.impl;
 
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
-import com.rocs.infirmary.application.exception.domain.InvalidDateException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.domain.student.list.StudentResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
