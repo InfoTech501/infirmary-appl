@@ -38,11 +38,11 @@ public class StudentServiceImpl implements StudentService {
 
         List<Student> students = this.studentRepository.findAll();
         List<StudentResponse> allStudentslist = new  ArrayList<>();
-
+        if(students == null){
+            throw new StudentNotFoundException("No student Found");
+        }
         for (Student student : students){
-            if(student == null){
-                throw new StudentNotFoundException("No student Found");
-            }if (student.getPerson() == null ||
+            if (student.getPerson() == null ||
                     student.getPerson().getFirstName() == null ||
                     student.getPerson().getLastName() == null ||
                     student.getPerson().getAge() <= 0) {
