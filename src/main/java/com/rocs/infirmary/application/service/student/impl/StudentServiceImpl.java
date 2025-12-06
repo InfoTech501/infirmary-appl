@@ -36,50 +36,35 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentResponse> findAllStudents() {
 
         List<Student> students = this.studentRepository.findAll();
-
-       List<StudentResponse> allStudentslist = new  ArrayList<>();
+        List<StudentResponse> allStudentslist = new  ArrayList<>();
 
         for (Student student : students){
-
             if (student.getPerson() == null ||
                     student.getPerson().getFirstName() == null ||
                     student.getPerson().getLastName() == null ||
                     student.getPerson().getAge() <= 0) {
                 throw new InvalidCredentialException("Name and Age details is missing");
-            }
-
-            if (student.getSection() == null ||
-                    student.getSection().getGradeLevel() == null) {
+            }if (student.getSection() == null || student.getSection().getGradeLevel() == null) {
                 throw new InvalidCredentialException("Section details is missing");
+            }if (student.getGuardian()==null) {
+                throw new InvalidCredentialException("Guardian details missing");
             }
-
-            if (student.getGuardian()==null) {
-            throw new InvalidCredentialException("Guardian details missing");
-            }
-
 
             StudentResponse allStudents = new StudentResponse();
 
             allStudents.setLrn(student.getLrn());
-
             allStudents.setFirstName(student.getPerson().getFirstName());
             allStudents.setLastName(student.getPerson().getLastName());
             allStudents.setAge(student.getPerson().getAge());
-
             allStudents.setSection(student.getSection().getSection());
             allStudents.setGradeLevel(student.getSection().getGradeLevel());
-
             allStudents.setGuardianName(student.getGuardian().getGuardianName());
 
 
             allStudentslist.add(allStudents);
-
         }
-
         return allStudentslist;
-
     }
-
 }
 
 
