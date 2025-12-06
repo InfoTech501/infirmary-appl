@@ -1,6 +1,7 @@
 package com.rocs.infirmary.application.service.student;
 
 import com.rocs.infirmary.application.domain.student.list.StudentResponse;
+import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ public interface StudentService {
     /**
      * this finds all students
      * */
-    List<StudentResponse> findAllStudents();
+    List<StudentResponse> findAllStudents() throws StudentNotFoundException;
 }

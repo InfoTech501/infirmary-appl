@@ -2,6 +2,7 @@ package com.rocs.infirmary.application.service.student.impl;
 
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
+import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.domain.student.list.StudentResponse;
@@ -33,13 +34,15 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<StudentResponse> findAllStudents() {
+    public List<StudentResponse> findAllStudents() throws  StudentNotFoundException{
 
         List<Student> students = this.studentRepository.findAll();
         List<StudentResponse> allStudentslist = new  ArrayList<>();
 
         for (Student student : students){
-            if (student.getPerson() == null ||
+            if(student == null){
+                throw new StudentNotFoundException("No student Found");
+            }if (student.getPerson() == null ||
                     student.getPerson().getFirstName() == null ||
                     student.getPerson().getLastName() == null ||
                     student.getPerson().getAge() <= 0) {

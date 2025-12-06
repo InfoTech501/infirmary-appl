@@ -104,7 +104,7 @@ public class StudentController {
      * @return ResponseEntity list for all Students, and http Status
      * */
     @GetMapping("/view-all")
-    public ResponseEntity<List<StudentResponse>> viewAllStudents(){
+    public ResponseEntity<List<StudentResponse>> viewAllStudents() throws StudentNotFoundException{
         return new ResponseEntity<>(this.studentService.findAllStudents(), HttpStatus.OK);
     }
       
