@@ -5,7 +5,9 @@ import com.rocs.infirmary.application.domain.student.clinic.visit.history.Clinic
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
 import com.rocs.infirmary.application.domain.student.list.StudentResponse;
+import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
+import com.rocs.infirmary.application.exception.domain.StudentHealthProfileNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.service.qr.code.QrCodeProviderService;
@@ -93,7 +95,7 @@ public class StudentController {
      * @return ResponseEntity containing the Student health profile, and http Status
      * */
     @GetMapping("/health-profile")
-    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) {
+    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) throws StudentHealthProfileNotFoundException, InvalidCredentialException {
         StudentHealthProfileResponse studentHealthProfile = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
         return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
     }
