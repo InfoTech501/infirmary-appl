@@ -56,9 +56,7 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
     }
 
     private void checkLrn(Long lrn) {
-        if (lrn == null) {
-            throw new InvalidCredentialException("LRN must not be null");
-        }
+
         int length = String.valueOf(lrn).length();
         if (length != 12) {
             throw new InvalidCredentialException("LRN must be 12 digits");
