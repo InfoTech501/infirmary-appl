@@ -254,6 +254,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String password = registration.getStudent().getUser().getPassword() == null
                 ? generatePassword()
                 : registration.getStudent().getUser().getPassword();
+        String gradeLevel;
+        if(!registration.getStudent().getSection().getGradeLevel().contains("Grade")){
+            gradeLevel = "Grade "+registration.getStudent().getSection().getGradeLevel();
+            registration.getStudent().getSection().setGradeLevel(gradeLevel);
+        }
 
         User newUser = new User();
         newUser.setPerson(registration.getStudent().getPerson());
