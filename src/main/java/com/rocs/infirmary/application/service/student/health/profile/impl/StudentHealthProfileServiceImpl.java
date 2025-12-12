@@ -37,11 +37,6 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
         checkLrn(lrn);
         Student student = studentRepository.findStudentByLrn(lrn);
 
-        if (student == null) {
-            LOGGER.error("Health profile not found");
-            throw new StudentHealthProfileNotFoundException("Student Health profile not found");
-        }
-
         StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
 
         studentHealthProfile.setStudent(new Student());
@@ -57,9 +52,12 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
 
     private void checkLrn(Long lrn) {
 
-        int length = String.valueOf(lrn).length();
-        if (length != 12) {
+        if (String.valueOf(lrn).length() != 12) {
             throw new InvalidCredentialException("LRN must be 12 digits");
+        }
+        Student studentlrn = studentRepository.findStudentByLrn(lrn);
+        if(studentlrn == null){
+            throw new StudentHealthProfileNotFoundException("lrn do not exist");
         }
     }
 }
