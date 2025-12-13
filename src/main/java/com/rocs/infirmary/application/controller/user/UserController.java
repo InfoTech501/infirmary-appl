@@ -78,7 +78,7 @@ public class UserController {
      * @return ResponseEntity containing the user object, and  Http Status
      * */
     @PostMapping("/register")
-    public ResponseEntity<Registration> register(@RequestBody Registration registration) throws UserNotFoundException, EmailExistException, UsernameExistException, StudentNotFoundException {
+    public ResponseEntity<Registration> register(@RequestBody Registration registration) throws UserNotFoundException, EmailExistException, UsernameExistException {
         if(!isValidRegistrationCredentials(registration)){
             throw new InvalidCredentialException("Registration Credential is empty");
         }
