@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Registration registerUser(Registration registration) throws StudentNotFoundException {
+    public Registration registerUser(Registration registration){
        if(registration.getStudent() != null){
            return registerStudent(registration);
        }else if(registration.getEmployee() != null) {
@@ -247,7 +247,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        }
     }
 
-    private Registration registerStudent(Registration registration) throws StudentNotFoundException {
+    private Registration registerStudent(Registration registration) throws StudentExistException {
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getStudent().getUser().getUsername(),registration.getStudent().getPerson().getEmail());
         validateStudentLrn(registration.getStudent().getLrn());
         String username = registration.getStudent().getUser().getUsername();
@@ -322,10 +322,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         savedRegistration.setEmployee(savedEmployee);
         return savedRegistration;
     }
-    private Student validateStudentLrn(Long lrn) throws StudentNotFoundException {
+    private Student validateStudentLrn(Long lrn){
        Student student = studentRepository.findStudentByLrn(lrn);
        if(student != null){
-           throw new StudentNotFoundException("LRN is already exsist");
+           throw new StudentExistException("LRN is already exsist");
        }
        return student;
     }

@@ -118,7 +118,11 @@ public class ExceptionHandling implements ErrorController {
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
     @ExceptionHandler(EmployeeNumberExistException.class)
-    public ResponseEntity<HttpResponse>EmployeeExistEception(EmployeeNumberExistException e){
+    public ResponseEntity<HttpResponse>EmployeeExistException(EmployeeNumberExistException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+    @ExceptionHandler(StudentExistException.class)
+    public ResponseEntity<HttpResponse>StudentExistException(StudentExistException e){
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
     @RequestMapping(ERROR_PATH)
