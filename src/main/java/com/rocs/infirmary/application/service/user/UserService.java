@@ -5,6 +5,7 @@ import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
+import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.security.core.Authentication;
 
@@ -34,7 +35,7 @@ public interface UserService {
      * @param registration is the object of the registration that contains the registration credential
      * @return User
      * */
-    Registration registerUser(Registration registration);
+    Registration registerUser(Registration registration) throws StudentNotFoundException;
     /**
      * this is used to set a new password when a user forgets it
      *

@@ -117,6 +117,10 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse>sectionNotFoundException(SectionNotFoundException e){
         return createHttpResponse(BAD_REQUEST,e.getMessage());
     }
+    @ExceptionHandler(EmployeeNumberExistException.class)
+    public ResponseEntity<HttpResponse>EmployeeExistEception(EmployeeNumberExistException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
     @RequestMapping(ERROR_PATH)
     public ResponseEntity<HttpResponse> notFound404() {
         return createHttpResponse(NOT_FOUND, "There is no mapping for this URL");

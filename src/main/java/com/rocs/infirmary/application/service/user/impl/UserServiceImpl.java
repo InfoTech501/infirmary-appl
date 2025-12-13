@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Registration registerUser(Registration registration) {
+    public Registration registerUser(Registration registration) throws StudentNotFoundException {
        if(registration.getStudent() != null){
            return registerStudent(registration);
        }else if(registration.getEmployee() != null) {
@@ -247,9 +247,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        }
     }
 
-    private Registration registerStudent(Registration registration){
+    private Registration registerStudent(Registration registration) throws StudentNotFoundException {
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getStudent().getUser().getUsername(),registration.getStudent().getPerson().getEmail());
-
+        validateStudentLrn(registration.getStudent().getLrn());
         String username = registration.getStudent().getUser().getUsername();
         String password = registration.getStudent().getUser().getPassword() == null
                 ? generatePassword()
@@ -281,7 +281,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Registration registerEmployee(Registration registration)throws DepartmentNotFoundException{
 
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername(),registration.getEmployee().getPerson().getEmail());
-
+        validateEmployeeId(registration.getEmployee().getEmployeeNumber());
         String username = registration.getEmployee().getUser().getUsername();
         String password = registration.getEmployee().getUser().getPassword() == null
                 ? generatePassword()
@@ -321,5 +321,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Registration savedRegistration = new Registration();
         savedRegistration.setEmployee(savedEmployee);
         return savedRegistration;
+    }
+    private Student validateStudentLrn(Long lrn) throws StudentNotFoundException {
+       Student student = studentRepository.findStudentByLrn(lrn);
+       if(student != null){
+           throw new StudentNotFoundException("LRN is already exsist");
+       }
+       return student;
+    }
+    private Employee validateEmployeeId(int employeeNumber){
+       Employee employee = this.employeeRepository.findEmployeeByEmployeeNumber(employeeNumber);
+        if(employee != null ){
+            throw new EmployeeNumberExistException("Employee number is already exist");
+        }
+       return employee;
     }
 }
