@@ -133,4 +133,10 @@ public class ExceptionHandling implements ErrorController {
         return new ResponseEntity<>(new HttpResponse(status.value(), status,
                 status.getReasonPhrase().toUpperCase(), message.toUpperCase()), status);
     }
+
+    @ExceptionHandler(StudentHealthProfileNotFoundException.class)
+    public ResponseEntity<HttpResponse>StudentHealthProfileNotFoundException(StudentHealthProfileNotFoundException e){
+        return createHttpResponse(BAD_REQUEST,e.getMessage());
+    }
+
 }
