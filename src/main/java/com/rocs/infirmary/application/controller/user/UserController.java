@@ -147,7 +147,7 @@ public class UserController {
                         "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
             if(!isValidDate(birthdate)){
-                throw new InvalidDateException("invalid date");
+                throw new InvalidCredentialException("invalid date");
             }
             if(!isValidEmail(studentEmail)){
                 throw new InvalidCredentialException("invalid email address format");
@@ -192,13 +192,15 @@ public class UserController {
         return name != null && name.matches("^[A-Za-z]+( [A-Za-z]+)*$");
     }
 
-    private boolean isValidDate(Date date) {
-//        if (date == null) return false;
+    private boolean isValidDate(Date birthdate) {
+        if (birthdate == null){
+            throw new InvalidCredentialException("Birthdate is empty, Please input your birthdate");
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
 
         try {
-            String dateString = dateFormat.format(date);
+            String dateString = dateFormat.format(birthdate);
             dateFormat.parse(dateString);
             return true;
         } catch (Exception e ) {
