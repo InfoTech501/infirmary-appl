@@ -44,13 +44,13 @@ public class UserController {
 
     /**
      * Constructs a new {@code UserController} with the required dependencies.
-     *
+     * <p>
      * This constructor is annotated with {@code Autowired} allows
      * Spring to inject the necessary beans at runtime.
      *
-     * @param userService the service layer for managing user operations
+     * @param userService           the service layer for managing user operations
      * @param authenticationManager the Spring Security authentication manager used to authenticate user credentials
-     * @param jwtTokenProvider the provider utility for generating and validating JWT used in secure authentication
+     * @param jwtTokenProvider      the provider utility for generating and validating JWT used in secure authentication
      */
     @Autowired
     public UserController(UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
@@ -61,73 +61,84 @@ public class UserController {
 
     /**
      * {@code login} used to handle the login request, this authenticates a user login based on the provided credential
-     * @param user is the object containing the user's credential from the { @code RequestBody}.
      *
+     * @param user is the object containing the user's credential from the { @code RequestBody}.
      * @return ResponseEntity containing the message, JWT Header and the Http Status
-     * */
+     */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user){
+    public ResponseEntity<String> login(@RequestBody User user) {
         authUserLogin(user.getUsername(), user.getPassword());
         User loginUser = this.userService.findUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = provideJwtHeader(userPrincipal);
-        return new ResponseEntity<>("login success",jwtHeader, HttpStatus.OK);
+        return new ResponseEntity<>("login success", jwtHeader, HttpStatus.OK);
     }
+
     /**
      * {@code register} used to handle the registration request, this accepts the object
+     *
      * @param registration that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
-     * */
+     */
     @PostMapping("/register")
-    public ResponseEntity<Registration> register(@RequestBody Registration registration)throws UserNotFoundException, EmailExistException, UsernameExistException {
-        if(!isValidRegistrationCredentials(registration)){
+    public ResponseEntity<Registration> register(@RequestBody Registration registration) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        if (!isValidRegistrationCredentials(registration)) {
             throw new InvalidCredentialException("Registration Credential is empty");
         }
         Registration registeredUser = this.userService.registerUser(registration);
-        return new ResponseEntity<>(registeredUser,HttpStatus.OK);
+        return new ResponseEntity<>(registeredUser, HttpStatus.OK);
     }
+
     /**
      * {@code resetPassword} used to handle the reset password request, this accepts the object
+     *
      * @param user that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
-     * */
+     */
     @PostMapping("/reset-password")
     public ResponseEntity<User> resetPassword(@RequestParam String token, @RequestBody User user) throws InvalidTokenException {
         try {
-            return new ResponseEntity<>(this.userService.resetPassword(token, user),HttpStatus.OK);
+            return new ResponseEntity<>(this.userService.resetPassword(token, user), HttpStatus.OK);
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * {@code forgetPassword} used to handle the forget password request, this accepts the object
+     *
      * @param user that contains the credential provided by the user
      * @return ResponseEntity containing the user object, and  Http Status
-     * */
+     */
     @PostMapping("/forget-password")
     public ResponseEntity<String> forgetPassword(@RequestBody User user) throws MessagingException {
         this.userService.forgetPassword(user);
-        return new ResponseEntity<>("Email sent successfully",HttpStatus.OK);
+        return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
     }
+
     /**
      * {@code getCurrentUser} used to get the authenticated user
+     *
      * @param authentication contains the authentication token
      * @return ResponseEntity containing the user object, and  Http Status
-     * */
+     */
     @GetMapping("/current-user")
     public ResponseEntity<AuthenticatedUser> getCurrentUser(Authentication authentication) {
-        return new ResponseEntity<>(this.userService.getAuthenticatedUserDetails(authentication),HttpStatus.OK);
+        return new ResponseEntity<>(this.userService.getAuthenticatedUserDetails(authentication), HttpStatus.OK);
     }
-    private void authUserLogin(String username, String password){
-        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+
+    private void authUserLogin(String username, String password) {
+        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
-    private HttpHeaders provideJwtHeader(UserPrincipal userPrincipal){
+
+    private HttpHeaders provideJwtHeader(UserPrincipal userPrincipal) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWT_TOKEN_HEADER,this.jwtTokenProvider.generateJwtToken(userPrincipal));
-       return httpHeaders;
+        httpHeaders.add(JWT_TOKEN_HEADER, this.jwtTokenProvider.generateJwtToken(userPrincipal));
+        return httpHeaders;
     }
-    private Boolean isValidRegistrationCredentials(Registration registration){
-        if(registration.getStudent() != null){
+
+    private Boolean isValidRegistrationCredentials(Registration registration) {
+        if (registration.getStudent() != null) {
             Long lrn = registration.getStudent().getLrn();
             String studentEmail = registration.getStudent().getPerson().getEmail();
             String studentFirstName = registration.getStudent().getPerson().getFirstName();
@@ -137,23 +148,22 @@ public class UserController {
             String studentPassword = registration.getStudent().getUser().getPassword();
             String gender = registration.getStudent().getPerson().getGender();
             Date birthdate = registration.getStudent().getPerson().getBirthdate();
-            if(lrn == null || Stream.of(studentEmail,studentFirstName,studentMiddleName,studentLastName,studentUsername,studentPassword,gender)
-                    .anyMatch(input -> input == null || input.isBlank())){
-             throw new InvalidCredentialException("Please provide all required fields");
+            if (lrn == null || Stream.of(studentEmail, studentFirstName, studentMiddleName, studentLastName, studentUsername, studentPassword, gender)
+                    .anyMatch(input -> input == null || input.isBlank())) {
+                throw new InvalidCredentialException("Please provide all required fields");
             }
             if (Stream.of(studentFirstName, studentMiddleName, studentLastName)
                     .anyMatch(name -> !isValidName(name))) {
                 throw new InvalidCredentialException(
                         "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
-            if(!isValidDate(birthdate)){
+            if (!isValidBirthdDate(birthdate)) {
                 throw new InvalidCredentialException("invalid date");
             }
-            if(!isValidEmail(studentEmail)){
+            if (!isValidEmail(studentEmail)) {
                 throw new InvalidCredentialException("invalid email address format");
             }
-        }
-        else if(registration.getEmployee() != null){
+        } else if (registration.getEmployee() != null) {
             String employeeEmail = registration.getEmployee().getPerson().getEmail();
             String employeeFirstName = registration.getEmployee().getPerson().getFirstName();
             String employeeMiddleName = registration.getEmployee().getPerson().getMiddleName();
@@ -162,8 +172,8 @@ public class UserController {
             String employeePassword = registration.getEmployee().getUser().getPassword();
             String employmentStatus = registration.getEmployee().getEmploymentStatus();
             int employeeNumber = registration.getEmployee().getEmployeeNumber();
-            Date dateEmployeed = registration.getEmployee().getDateEmployed();
-            if(employeeNumber <= 0 || Stream.of(employeeEmail,employeeFirstName,employeeMiddleName,employeeLastName,employeeUsername,employeePassword,employmentStatus,dateEmployeed.toString()).anyMatch(String::isBlank) ){
+            Date dateEmployed = registration.getEmployee().getDateEmployed();
+            if (employeeNumber <= 0 || Stream.of(employeeEmail, employeeFirstName, employeeMiddleName, employeeLastName, employeeUsername, employeePassword, employmentStatus).anyMatch(String::isBlank)) {
                 throw new InvalidCredentialException("Please provide all required field");
             }
 
@@ -173,16 +183,17 @@ public class UserController {
                 throw new InvalidCredentialException(
                         "Invalid Name Credentials, please remove any numbers, symbols, special characters, or double spaces.");
             }
-            if(!isValidEmail(employeeEmail)){
+            if (!isValidEmail(employeeEmail)) {
                 throw new InvalidCredentialException("invalid email address format");
             }
-//            if(!isValidEmploymentDate(dateEmployeed)){
-//                throw new InvalidCredentialException("invalid dateEmployeed format");
-//            }
+            if(!isValidEmploymentDate(dateEmployed)){
+                throw new InvalidCredentialException("invalid Employment date");
+            }
         }
         return true;
     }
-    private boolean isValidEmail(String email){
+
+    private boolean isValidEmail(String email) {
         Pattern pattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
         Matcher emailmatcher = pattern.matcher(email);
         return emailmatcher.find();
@@ -192,8 +203,8 @@ public class UserController {
         return name != null && name.matches("^[A-Za-z]+( [A-Za-z]+)*$");
     }
 
-    private boolean isValidDate(Date birthdate) {
-        if (birthdate == null){
+    private boolean isValidBirthdDate(Date birthdate) {
+        if (birthdate == null) {
             throw new InvalidCredentialException("Birthdate is empty, Please input your birthdate");
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -203,9 +214,16 @@ public class UserController {
             String dateString = dateFormat.format(birthdate);
             dateFormat.parse(dateString);
             return true;
-        } catch (Exception e ) {
+        } catch (Exception e) {
             return false;
         }
+    }
+
+    private boolean isValidEmploymentDate(Date dateEmployed) {
+        if (dateEmployed == null) {
+        throw new InvalidCredentialException("Date Employed is empty, Please input date of emplyment");
+        }
+        return true;
     }
 
 
