@@ -9,7 +9,8 @@ import com.rocs.infirmary.application.exception.domain.EmptyFieldException;
 import com.rocs.infirmary.application.exception.domain.StudentAlreadyExistException;
 import com.rocs.infirmary.application.repository.student.StudentRepository;
 import com.rocs.infirmary.application.service.student.health.profile.StudentHealthProfileService;
-import com.rocs.infirmary.application.service.student.health.profile.exception.StudentHealthProfileNotFoundException;
+import com.rocs.infirmary.application.exception.domain.StudentHealthProfileNotFoundException;
+import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,21 +40,33 @@ public class StudentHealthProfileServiceImpl implements StudentHealthProfileServ
     }
 
     @Override
-    public StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn) {
+    public StudentHealthProfileResponse getStudentHealthProfileByLrn(Long lrn) throws StudentHealthProfileNotFoundException, InvalidCredentialException {
 
-
+        checkLrn(lrn);
         Student student = studentRepository.findStudentByLrn(lrn);
-
-        if (student==null) {
-            LOGGER.error("Health profile not found");
-            throw new StudentHealthProfileNotFoundException("Student Health profile not found");
-        }
 
         StudentHealthProfileResponse studentHealthProfile = new StudentHealthProfileResponse();
 
-        studentHealthProfile.setStudent(student);
+        studentHealthProfile.setStudent(new Student());
+        studentHealthProfile.getStudent().setId(student.getId());
+        studentHealthProfile.getStudent().setLrn(student.getLrn());
+        studentHealthProfile.getStudent().setPerson(student.getPerson());
+        studentHealthProfile.getStudent().setSection(student.getSection());
+        studentHealthProfile.getStudent().setGuardian(student.getGuardian());
+        studentHealthProfile.getStudent().setMedicalHistory(student.getMedicalHistory());
 
         return studentHealthProfile;
+    }
+
+    private void checkLrn(Long lrn) {
+
+        if (String.valueOf(lrn).length() != 12) {
+            throw new InvalidCredentialException("LRN must be 12 digits");
+        }
+        Student studentlrn = studentRepository.findStudentByLrn(lrn);
+        if(studentlrn == null){
+            throw new StudentHealthProfileNotFoundException("lrn do not exist");
+        }
     }
 
     /**
