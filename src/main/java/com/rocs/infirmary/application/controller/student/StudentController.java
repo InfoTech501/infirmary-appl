@@ -50,7 +50,7 @@ public class StudentController {
         this.qrCodeProviderService = qrCodeProviderService;
     }
 
-  
+
     /**
      * This converter allows Spring to automatically serialize {@code BufferedImage} responses to HTTP responses in image format.
      * @return a {@link BufferedImageHttpMessageConverter} for handling image responses
@@ -109,7 +109,7 @@ public class StudentController {
     public ResponseEntity<List<StudentResponse>> viewAllStudents() throws StudentNotFoundException{
         return new ResponseEntity<>(this.studentService.findAllStudents(), HttpStatus.OK);
     }
-      
+
     /**
      * used to facilitate the request for generating the parent qr code for view student health profile
      *
@@ -119,5 +119,16 @@ public class StudentController {
     public ResponseEntity<BufferedImage> generateQrCode(Authentication authentication) throws StudentNotFoundException {
         return new ResponseEntity<>(qrCodeProviderService.generateQrCode(authentication),HttpStatus.OK);
     }
-    
+    /**
+     * Submits a new student health profile.
+     *
+     * @param student the student object with health profile details
+     * @return the saved student with status {@code OK}
+     */
+    @PostMapping("/submit/health-profile")
+    public ResponseEntity<Student> createStudentHealthProfile(@RequestBody Student student) throws StudentNotFoundException {
+        Student profile = studentHealthProfileService.addStudentHealthProfile(student);
+        return new ResponseEntity<>(profile,HttpStatus.OK);
+    }
+
 }
