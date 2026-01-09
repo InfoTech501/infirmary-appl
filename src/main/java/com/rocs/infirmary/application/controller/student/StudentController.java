@@ -4,9 +4,14 @@ package com.rocs.infirmary.application.controller.student;
 import com.rocs.infirmary.application.domain.student.clinic.visit.history.ClinicVisitHistory;
 import com.rocs.infirmary.application.domain.student.Student;
 import com.rocs.infirmary.application.domain.student.health.information.StudentHealthInformation;
+import com.rocs.infirmary.application.domain.student.list.StudentResponse;
+import com.rocs.infirmary.application.exception.domain.InvalidCredentialException;
 import com.rocs.infirmary.application.exception.domain.SectionNotFoundException;
+import com.rocs.infirmary.application.exception.domain.StudentHealthProfileNotFoundException;
 import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
+import com.rocs.infirmary.application.service.student.StudentService;
 import com.rocs.infirmary.application.service.qr.code.QrCodeProviderService;
+
 import com.rocs.infirmary.application.service.student.clinic.visit.history.ClinicVisitHistoryService;
 import com.rocs.infirmary.application.service.student.health.information.StudentHealthInformationService;
 import com.rocs.infirmary.application.domain.student.health.profile.StudentHealthProfileResponse;
@@ -30,21 +35,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentHealthInformationService studentService;
+    private final StudentHealthInformationService studentHealthInformationService;
     private final ClinicVisitHistoryService clinicVisitHistoryService;
-    private final QrCodeProviderService qrCodeProviderService;
+    private final StudentService studentService;
     private final StudentHealthProfileService studentHealthProfileService;
+    private final QrCodeProviderService qrCodeProviderService;
 
     @Autowired
-    public StudentController(StudentHealthInformationService studentService,
-                             ClinicVisitHistoryService clinicVisitHistoryService,
-                             StudentHealthProfileService studentHealthProfileService,
-                             QrCodeProviderService qrCodeProviderService) {
-        this.studentService = studentService;
+    public StudentController(StudentHealthInformationService studentHealthInformationService, ClinicVisitHistoryService clinicVisitHistoryService, StudentHealthProfileService studentHealthProfileService, StudentService studentService, QrCodeProviderService qrCodeProviderService) {
+        this.studentHealthInformationService = studentHealthInformationService;
         this.clinicVisitHistoryService = clinicVisitHistoryService;
         this.studentHealthProfileService = studentHealthProfileService;
+        this.studentService = studentService;
         this.qrCodeProviderService = qrCodeProviderService;
     }
+
+  
     /**
      * This converter allows Spring to automatically serialize {@code BufferedImage} responses to HTTP responses in image format.
      * @return a {@link BufferedImageHttpMessageConverter} for handling image responses
@@ -60,7 +66,7 @@ public class StudentController {
      * */
     @PutMapping("/health-profile/update")
     public ResponseEntity<Student> updateStudent(@RequestBody StudentHealthInformation student) throws StudentNotFoundException, SectionNotFoundException {
-        return new ResponseEntity<>(this.studentService.updateStudentHealthInformation(student),HttpStatus.OK);
+        return new ResponseEntity<>(this.studentHealthInformationService.updateStudentHealthInformation(student),HttpStatus.OK);
     }
 
     /**
@@ -89,10 +95,21 @@ public class StudentController {
      * @return ResponseEntity containing the Student health profile, and http Status
      * */
     @GetMapping("/health-profile")
-    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) {
+    public ResponseEntity<StudentHealthProfileResponse> findStudentHealthProfileByLrn(@RequestParam Long lrn) throws StudentHealthProfileNotFoundException, InvalidCredentialException {
         StudentHealthProfileResponse studentHealthProfile = studentHealthProfileService.getStudentHealthProfileByLrn(lrn);
         return new ResponseEntity<>(studentHealthProfile, HttpStatus.OK);
     }
+
+    /**
+     * used to facilitate the request for getting a list of all students in
+     *
+     * @return ResponseEntity list for all Students, and http Status
+     * */
+    @GetMapping("/view-all")
+    public ResponseEntity<List<StudentResponse>> viewAllStudents() throws StudentNotFoundException{
+        return new ResponseEntity<>(this.studentService.findAllStudents(), HttpStatus.OK);
+    }
+      
     /**
      * used to facilitate the request for generating the parent qr code for view student health profile
      *
@@ -102,4 +119,5 @@ public class StudentController {
     public ResponseEntity<BufferedImage> generateQrCode(Authentication authentication) throws StudentNotFoundException {
         return new ResponseEntity<>(qrCodeProviderService.generateQrCode(authentication),HttpStatus.OK);
     }
+    
 }

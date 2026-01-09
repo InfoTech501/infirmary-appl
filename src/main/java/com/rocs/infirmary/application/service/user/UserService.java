@@ -1,14 +1,12 @@
 package com.rocs.infirmary.application.service.user;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rocs.infirmary.application.domain.person.Person;
 import com.rocs.infirmary.application.domain.registration.Registration;
 import com.rocs.infirmary.application.domain.user.User;
 import com.rocs.infirmary.application.domain.user.authenticated.AuthenticatedUser;
-import com.rocs.infirmary.application.exception.domain.EmailExistException;
 import com.rocs.infirmary.application.exception.domain.InvalidTokenException;
-import com.rocs.infirmary.application.exception.domain.UserNotFoundException;
-import com.rocs.infirmary.application.exception.domain.UsernameExistException;
+import com.rocs.infirmary.application.exception.domain.StudentExistException;
+import com.rocs.infirmary.application.exception.domain.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.security.core.Authentication;
 
@@ -38,7 +36,7 @@ public interface UserService {
      * @param registration is the object of the registration that contains the registration credential
      * @return User
      * */
-    Registration registerUser(Registration registration);
+    Registration registerUser(Registration registration) throws StudentExistException;
     /**
      * this is used to set a new password when a user forgets it
      *
@@ -57,4 +55,11 @@ public interface UserService {
      * @param authentication object representing the currently authenticated user
      * */
     AuthenticatedUser getAuthenticatedUserDetails(Authentication authentication);
+    /**
+     * this is used to get the subject from parent token
+     *
+     * @param token is the jwt token for the parent
+     * @return the subject extracted from the token
+     * */
+    String getSubjectFromParentToken(String token);
 }

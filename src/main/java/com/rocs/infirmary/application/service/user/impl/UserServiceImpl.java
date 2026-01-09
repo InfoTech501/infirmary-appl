@@ -19,6 +19,7 @@ import com.rocs.infirmary.application.service.email.EmailService;
 import com.rocs.infirmary.application.service.login.attempts.LoginAttemptsService;
 import com.rocs.infirmary.application.service.password.reset.token.PasswordResetTokenService;
 import com.rocs.infirmary.application.service.user.UserService;
+import com.rocs.infirmary.application.utils.security.jwt.token.provider.JwtTokenProvider;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private SectionRepository sectionRepository;
     private EmailService emailService;
     private PasswordResetTokenService passwordResetTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${spring.application.base-url}")
     private String baseUrl;
@@ -78,7 +80,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            DepartmentRepository departmentRepository,
                            EmailService emailService,
                            PasswordResetTokenService passwordResetTokenService,
-                           SectionRepository sectionRepository) {
+                           SectionRepository sectionRepository,
+                           JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptsService = loginAttemptsService;
@@ -89,7 +92,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.sectionRepository = sectionRepository;
         this.emailService = emailService;
         this.passwordResetTokenService = passwordResetTokenService;
-    }
+       this.jwtTokenProvider = jwtTokenProvider;
+   }
 
     @Override
     public User findUserByUsername(String username) {
@@ -117,7 +121,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Registration registerUser(Registration registration) {
+    public Registration registerUser(Registration registration){
        if(registration.getStudent() != null){
            return registerStudent(registration);
        }else if(registration.getEmployee() != null) {
@@ -190,6 +194,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return authenticatedUser;
     }
 
+    @Override
+    public String getSubjectFromParentToken(String token) {
+       String subjectFromParentToken = this.jwtTokenProvider.getSubject(token);
+       return subjectFromParentToken;
+    }
+
     private User validateUsernameAndEmail(String currentUsername, String newUsername, String email){
         User userByUsername = findUserByUsername(newUsername);
         User userByEmail = this.userRepository.findUserByPersonEmail(email);
@@ -237,13 +247,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
        }
     }
 
-    private Registration registerStudent(Registration registration){
+    private Registration registerStudent(Registration registration) throws StudentExistException {
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getStudent().getUser().getUsername(),registration.getStudent().getPerson().getEmail());
-
+        validateStudentLrn(registration.getStudent().getLrn());
         String username = registration.getStudent().getUser().getUsername();
         String password = registration.getStudent().getUser().getPassword() == null
                 ? generatePassword()
                 : registration.getStudent().getUser().getPassword();
+        String gradeLevel;
+        if(!registration.getStudent().getSection().getGradeLevel().contains("Grade")){
+            gradeLevel = "Grade "+registration.getStudent().getSection().getGradeLevel();
+            registration.getStudent().getSection().setGradeLevel(gradeLevel);
+        }
 
         User newUser = new User();
         newUser.setPerson(registration.getStudent().getPerson());
@@ -271,7 +286,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Registration registerEmployee(Registration registration)throws DepartmentNotFoundException{
 
         validateUsernameAndEmail(StringUtils.EMPTY, registration.getEmployee().getUser().getUsername(),registration.getEmployee().getPerson().getEmail());
-
+        validateEmployeeId(registration.getEmployee().getEmployeeNumber());
         String username = registration.getEmployee().getUser().getUsername();
         String password = registration.getEmployee().getUser().getPassword() == null
                 ? generatePassword()
@@ -311,5 +326,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Registration savedRegistration = new Registration();
         savedRegistration.setEmployee(savedEmployee);
         return savedRegistration;
+    }
+    private Student validateStudentLrn(Long lrn){
+       Student student = studentRepository.findStudentByLrn(lrn);
+       if(student != null){
+           throw new StudentExistException("LRN is already exsist");
+       }
+       return student;
+    }
+    private Employee validateEmployeeId(int employeeNumber){
+       Employee employee = this.employeeRepository.findEmployeeByEmployeeNumber(employeeNumber);
+        if(employee != null ){
+            throw new EmployeeNumberExistException("Employee number is already exist");
+        }
+       return employee;
     }
 }
