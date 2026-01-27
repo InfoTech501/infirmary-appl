@@ -209,22 +209,27 @@ public class UserController {
         if (birthdate == null) {
             throw new InvalidCredentialException("Birthdate is empty, Please input your birthdate");
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(false);
-
-        try {
-            String dateString = dateFormat.format(birthdate);
-            dateFormat.parse(dateString);
-            return true;
-        } catch (Exception e) {
-            return false;
+        Date dateToday = new Date();
+        if (birthdate.after(dateToday)) {
+            throw new InvalidCredentialException(
+                    "Birthdate cannot be in the future"
+            );
         }
+        return true;
     }
 
     private boolean isValidEmploymentDate(Date dateEmployed) {
         if (dateEmployed == null) {
         throw new InvalidCredentialException("Date Employed is empty, Please input date of emplyment");
         }
+
+        Date dateToday = new Date();
+        if(dateEmployed.after(dateToday)){
+            throw new InvalidCredentialException(
+                    "Employment Date cannot be in the future"
+            );
+        }
+
         return true;
     }
 
