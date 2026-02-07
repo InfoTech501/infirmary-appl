@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -229,7 +228,6 @@ public class UserController {
                     "Employment Date cannot be in the future"
             );
         }
-
         return true;
     }
 
